@@ -1,0 +1,18 @@
+<script>
+   window.alertos = function(msg, clr) {
+    $("#pushval").prop('disabled', false);
+    $('#alert span').text(msg);
+              $('#alert').css('backgroundColor', clr).css('display', 'inline-block');
+              $('#alert').animate({
+                  'opacity': '1'
+              }, 500)
+              setTimeout(function() {
+                  $('#alert').animate({
+                      'opacity': '0'
+                  }, 400, function(){$('#alert').css('display', 'none');})
+              }, 12000);
+          }
+</script>
+<div id="alert" style="opacity: 0;"><span>привет</span>
+<a id="close" style="font-size: 20px;padding: 5px 12px; box-sizing: border-box; margin-left: 25px; border: 1px solid white; color: white; border-radius: 1px;">×</a>
+</div>

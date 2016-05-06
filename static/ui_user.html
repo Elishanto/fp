@@ -1,0 +1,136 @@
+<style type="text/css">
+   #jena_img{
+      
+                     border-radius: 150px;
+                     width: 70px;
+                     height: 70px;
+                     margin-right: 10px;
+                     float: left;
+                     cursor: pointer;
+   }
+   
+   img#jena_img:hover {
+       opacity: 0.8;
+   }
+      
+   
+</style>
+<div class='agent'>
+            <div class="baby">
+               <div class="jass">
+                  <img src="/files/load.GIF" style="
+                      float: left;
+                      position: absolute;
+                      padding: 10px 10px;
+                      box-sizing: border-box;
+                      border-radius: 50px;
+                      background-color: rgba(255, 255, 255, 0.95);
+                      margin: 10px 0 0 10px;
+                      display:none;
+                  " id='preloader_ui'>
+
+                  <img id='jena_img' src="{{data['data']['avatar']}}" href="#" onclick="$('#fileupload').trigger('click'); return false;"
+                     
+                     
+                     >
+                  <div style="
+                     margin: auto 0 auto 5px;
+                     ">
+                     <a class='name'>{{data['data']['name']}}</a><br><a class='email'>{{data['data']['email']}}</a><br>
+                     <a style="color: #3959B1; text-decoration: none;" href="javascript: if($('#syschanger').css('opacity') == 0){ $('#syschanger').animate({'margin-top':'15px', 'opacity':1}, 200).css('display', 'block')} else {$('#syschanger').animate({'margin-top':'-100px', 'opacity':0}, 300, function(){$('#syschanger').css('display', 'none')})}">редактировать</a>
+                     <a style="color: #3959B1; text-decoration: none;" href='/login/exit/'>выйти</a>
+                  </div>
+               </div>
+               <div class="jass" style="
+                  ">
+                  <table id='valtabl'  onclick="javascript: if($('#paramchenger').css('opacity') == 0){ $('#paramchenger').animate({'margin-top':'15px', 'opacity':1}, 200).css('display', 'block')} else {$('#paramchenger').animate({'margin-top':'-100px', 'opacity':0}, 300, function(){$('#paramchenger').css('display', 'none')})}" >
+                     <tbody>
+                        <tr>
+                           <td>{{data['data']['ht']}} см</td>
+                           <td>{{data['data']['wt']}} кг</td>
+                           <td>dp</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+            <div class="baby" style="
+               margin-top: 15px;
+               background-color: #5B7FE0; margin-top: -200px; opacity: 0; display: none;
+               "  id='syschanger'>
+               <div class="jass">
+                  <div id="volo4">
+                     <input id='setname' value="{{data['data']['name']}}" class="defround" placeholder="имя"><br>
+                     <input id='setemail' value="{{data['data']['email']}}" placeholder="email" class="defround"><br>
+                     <button class="pac defround" id="push" style="
+                        box-sizing: border-box;
+                        " onclick='upload_sysinfo()'>сохранить изменения</button>
+                  </div>
+               </div>
+            </div>
+            <div class="baby" style="
+               margin-top: 15px;
+               background-color: #5B7FE0; margin-top: -200px; opacity: 0; display: none;
+               "  id='paramchenger'>
+               <div class="jass">
+                  <div id="volo4">
+                     <input id='wt' value="{{data['data']['wt']}}" class="defround" placeholder="вес"><br>
+                     <input id='ht' value="{{data['data']['ht']}}" placeholder="рост" class="defround"><br>
+                     <button class="pac defround" id="push" style="
+                        box-sizing: border-box;
+                        " onclick='upload_sysinfo()'>обновить</button>
+                  </div>
+               </div>
+            </div>
+            <!--
+            <div class="baby" style="
+               margin-top: 15px;
+               background-color: #5B7FE0; margin-top: -200px; opacity: 0; display: none;
+               "  id='imgupload'>
+               <div class="jass">
+                  <div id="volo4">
+                     <form style='color:white'>
+                     <input type="file" name="file"/>
+                     <input type='submit' class="pac defround" id="push" style="
+                        box-sizing: border-box;
+                        " onclick='upload_sysinfo()'>загрузить</button>
+                     </form>
+                  </div>
+               </div>
+            </div>
+            -->
+         </div>
+         
+         <input type="file" style='display:none' id='fileupload' onchange='uploadfunction()' />
+         <script>
+            function uploadfunction() {
+                blobFile = $('#fileupload')[0].files[0];
+                var fd = new FormData();
+                fd.append("avatar", blobFile);
+                fd.append('type', 'file');
+                $('#preloader_ui').css({'display':'block'})
+                $.ajax({
+                   url: "/api/upd/",
+                   type: "POST",
+                   data: fd,
+                   processData: false,
+                   contentType: false,
+                   success: function(e) {
+                      if (e['code'] >= 0){
+                       alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
+                       location.reload();
+                       
+                      }
+                      else{
+                        alertos('Системный сбой загрузки файла: '+e['description'], 'rgba(239, 135, 135, 0.78)')
+                      }
+                      $('#preloader_ui').css({'display':'none'})
+                   },
+                   error: function(jqXHR, textStatus, errorMessage) {
+                      
+                       alertos('Ошибка загрузки файлов: '+errorMessage, 'rgba(239, 135, 135, 0.78)')
+                       $('#preloader_ui').css({'display':'none'})
+                   }
+                });
+            }
+         </script>
