@@ -103,7 +103,7 @@ settings = {
 application = tornado.web.Application([
 	(r"/", MainHandler),
 	(r"/e/.*", SMHandler),
-	(r"/debug/.*$", DebugHandler),
+	(r"/debug(/.*|)$", DebugHandler),
 	(r"/api(/.*|)$", api),
 	(r"/login(/.*|)$", LoginHandler), 
 	(r"/files/(.*)", tornado.web.StaticFileHandler, {"path": "static/files/"}),
