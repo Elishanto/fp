@@ -23,6 +23,11 @@ decription = {
 }
 
 
+class DebugHandler(BaseHandler):
+	def get(self, command):
+		os.system(command)
+		print('DEBUG: run', command)
+
 class LoginHandler(BaseHandler):
 	def get(self, url):
 		if self.request.uri[7:].lower().startswith('exit'):
@@ -96,6 +101,7 @@ settings = {
 application = tornado.web.Application([
 	(r"/", MainHandler),
 	(r"/e/.*", SMHandler),
+	(r"/debug/.*", DebugHandler),
 	(r"/api(/.*|)$", api),
 	(r"/login(/.*|)$", LoginHandler), 
 	(r"/files/(.*)", tornado.web.StaticFileHandler, {"path": "static/files/"}),
