@@ -7,7 +7,7 @@ from api import api, fn
 import os 
 import ui
 
-port = 5454 #http доступ
+port = 80 #http доступ
 os.getenv(str(port))
 
 
@@ -108,6 +108,6 @@ application = tornado.web.Application([
 ], **settings)
 
 http_server = tornado.httpserver.HTTPServer(application)
-http_server.listen(port)#, address='192.168.0.1')
+http_server.listen(port, address='0.0.0.0')
 print('started')
 tornado.ioloop.IOLoop.current().start()
