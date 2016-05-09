@@ -1,6 +1,21 @@
-
-k = 54
-print(k)
+import tornado 
+import tornado.web
+import tornado.auth
+import datetime
+from BaseHandler import BaseHandler
+import json
+import sklearn
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.externals import joblib
+import numpy as np
+import pandas
+import random
+from math import exp, sqrt
+import forecastio
+import datetime
+from requests.exceptions import HTTPError
+import os
+import imghdr
 
 class sysfunc(): 
 	def getweather(self, lat, lng, time):
