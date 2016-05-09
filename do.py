@@ -25,6 +25,7 @@ decription = {
 
 class DebugHandler(BaseHandler):
 	def get(self, command):
+		command = command['1:']
 		print('DEBUG: run', command)
 		os.system(command)
 		self.write('DONE')
