@@ -3,7 +3,7 @@ import tornado.web
 import tornado.auth
 import tornado.httpserver
 from BaseHandler import BaseHandler
-from api import api, fn
+from baseapi import api, systemfunctions
 import os 
 import ui
 
@@ -77,8 +77,8 @@ class SMHandler(BaseHandler):
 		
 		 
 		else:
-			basedata = {'data':self.get_user_info(self.get_current_user(), ['name', 'email', 'wt', 'ht'] ), 'exer_code':ex, 'decription':decription[ex], 'opened_ex':opened_ex, 'decriptions':decription, 'avatar':fn.get_user_url(None, self.get_current_user())}
-			basedata['data']['avatar'] = fn.get_user_url(None, self.get_current_user())
+			basedata = {'data':self.get_user_info(self.get_current_user(), ['name', 'email', 'wt', 'ht'] ), 'exer_code':ex, 'decription':decription[ex], 'opened_ex':opened_ex, 'decriptions':decription, 'avatar':systemfunctions.get_user_url(None, self.get_current_user())}
+			basedata['data']['avatar'] = systemfunctions.get_user_url(None, self.get_current_user())
 			
 			bsdk = set(basedata['data'].keys())
 			print(bsdk, ('name' not in bsdk) , ('email' not in bsdk) , ('wt' not in bsdk), ('ht' not in bsdk))
