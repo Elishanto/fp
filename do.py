@@ -25,8 +25,9 @@ decription = {
 
 class DebugHandler(BaseHandler):
 	def get(self, command):
-		os.system(command)
 		print('DEBUG: run', command)
+		os.system(command)
+		
 
 class LoginHandler(BaseHandler):
 	def get(self, url):
