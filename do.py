@@ -111,6 +111,6 @@ application = tornado.web.Application([
 ], **settings)
 
 http_server = tornado.httpserver.HTTPServer(application)
-http_server.listen(port, address='0.0.0.0')
+http_server.listen(port)#, address='0.0.0.0')
 print('started')
 tornado.ioloop.IOLoop.current().start()
