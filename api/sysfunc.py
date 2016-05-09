@@ -17,6 +17,22 @@ from requests.exceptions import HTTPError
 import os
 import imghdr
 
+
+
+lat, lng = 55.27, 65.20
+formats = ('png', 'jpg', 'jpeg', 'gif') 
+weather_key = '5c256d08f6b478fdb0d1dded1fcaae44' 
+decription = {
+	10: 'отжимания',
+	11: 'потдягивания',
+	54: 'поедание круасанчиков',
+	777: 'жокирство', 
+	778: 'чтение',
+	12 : 'пресс',
+	13 : 'приседания'
+}
+
+
 class sysfunc(): 
 	def getweather(self, lat, lng, time):
 		"""
