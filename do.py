@@ -36,7 +36,7 @@ class DevHandler(BaseHandler):
 				postdata = json.loads(self.request.body.decode(encoding='utf8'))
 			except BaseException:
 				return
-
+ 
 			print('debugdata', postdata)
 			if self.request.headers.get('X-Github-Event', '-1') == 'push' and postdata.get("ref", '').split('/') == 'master':
 				sh0 = self.request.headers.get('X-Hub-Signature', '-1').split('=')[-1]
