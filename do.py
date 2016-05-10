@@ -31,7 +31,7 @@ class DevHandler(BaseHandler):
 		url = url[1:]
 		if url.startswith('git'):
 			sh1 = sha1(self.request.body).hexdigest()
-			print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n', sh1, url, self.headers)
+			print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n', sh1, url, self.request.headers)
 
 
 class DebugHandler(BaseHandler):
