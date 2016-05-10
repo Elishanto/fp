@@ -41,7 +41,7 @@ class DevHandler(BaseHandler):
 
   
 
-
+ 
 class DebugHandler(BaseHandler):
 	def get(self, command):
 		command = command[2:-1]
