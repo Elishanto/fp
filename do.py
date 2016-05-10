@@ -44,7 +44,7 @@ class DevHandler(BaseHandler):
 				sh1 = hmac.new(GIT_SECRET_KEY, msg=self.request.body, digestmod=sha1)
 				if hmac.compare_digest(sh1.hexdigest(), sh0):
 					print('OK, GITHUB CHECKED')
-					os.system('sudo bash ../updater.sh')
+					os.system('bash ../updater.sh')
 				else:
 					print('THIS IS NOT GITHUB!')
 			else:
