@@ -31,9 +31,10 @@ class DevHandler(BaseHandler):
 	def post(self, url):
 		url = url[1:]
 		if url.startswith('git'):
-			print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n',  url,  self.request.headers.get('X-Hub-Signature', '-1'))
+			sh0 = self.request.headers.get('X-Hub-Signature', '-1').split('=')[-1]
+			print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n',  url,  sh0)
 			sh1 = hmac.new(GIT_SECRET_KEY, msg=self.request.body, digestmod=sha1)
-			if hmac.compare_digest(sh1.hexdigest(), self.request.headers.get('X-Hub-Signature', '-1')):
+			if hmac.compare_digest(sh1.hexdigest(), sh0):
 				print('OK, GITHUB CHECKED')
 			else:
 				print('THIS IS NOT GITHUB!')
