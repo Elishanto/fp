@@ -9,7 +9,7 @@ import ui
 
 port = 80 #http доступ
 os.getenv(str(port))
-
+ 
 
 
 decription = {
@@ -21,7 +21,7 @@ decription = {
 	12 : 'пресс',
 	13 : 'приседания'
 }
-
+ 
 
 class DebugHandler(BaseHandler):
 	def get(self, command):
