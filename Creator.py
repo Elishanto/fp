@@ -14,3 +14,4 @@ database['users'].save({'id':nID, 'valid':1, 'opened_ex':(10,11)})
 
 print('Na done. Now u can start do.py and go to localhost:PORT to connect with id', nID)
 
+

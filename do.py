@@ -30,15 +30,14 @@ class DevHandler(BaseHandler):
 	def post(self, url):
 		url = url[1:]
 		if url.startswith('git'):
-			print('\n\n\nPOST DATA\n', url, '\n', self.request.body.decode('utf8'), '\n\n\n')
-			print('\n\n\nPOST DATA?\n', url, '\n', self.request.data, '\n\n\n')
+			sh1 = sha1(self.request.body).hexdigest()
+			print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n', sh1, url, self.headers)
+
 
 class DebugHandler(BaseHandler):
 	def get(self, command):
 		command = command[2:-1]
-		print('DEBUG: run', command)
 		os.system(command)
-		self.write('DONE')
 
 		
 
@@ -57,11 +56,8 @@ class LoginHandler(BaseHandler):
 		except BaseException:
 			redirect = 1
 		
-		print('POST')
-
 		if self.check_via_login(user):
 			self.set_secure_cookie("user", user)
-			self.write('DONE')
 			if redirect:
 				self.redirect("/")
 		else:
