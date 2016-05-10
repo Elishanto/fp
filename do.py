@@ -11,11 +11,12 @@ from hashlib import sha1
 import hmac
 
 port = 80 #http доступ
+os.getenv(str(port))
+ 
 os.getenv(str(port)) 
 
 GIT_SECRET_KEY = bytes('4297d0f6378e63675607cb6ab5005e503cb26b66', encoding='utf8')
 
- 
 decription = {
 	10: 'отжимания',
 	11: 'потдягивания',
@@ -43,7 +44,7 @@ class DevHandler(BaseHandler):
 				sh1 = hmac.new(GIT_SECRET_KEY, msg=self.request.body, digestmod=sha1)
 				if hmac.compare_digest(sh1.hexdigest(), sh0):
 					print('OK, GITHUB CHECKED')
-					os.system('sudo bash ../updater.sh')
+					os.system('bash ../updater.sh')
 				else:
 					print('THIS IS NOT GITHUB!')
 			else:
@@ -55,7 +56,9 @@ class DevHandler(BaseHandler):
 class DebugHandler(BaseHandler):
 	def get(self, command):
 		command = command[2:-1]
-		os.system(command)
+		#os.system(command)
+		self.write('calcelled')
+		 
   
 		
 

@@ -41,14 +41,12 @@ class sysfunc():
 		global weather_key
 		if abs(time - datetime.datetime.now()).total_seconds() // (60*60) <= 24:
 			if self.weather_cache is None:
-				print('set cache')
 				self.weather_cache =  forecastio.load_forecast(weather_key, lat, lng, time=datetime.datetime.now(),\
 				 units="us").hourly().data[datetime.datetime.now().hour].d
 				self.weather_cache_time = datetime.datetime.now()
 				return(self.weather_cache)
 			else:
 				if abs(time - self.weather_cache_time).total_seconds() // (60*60) <= 24:
-					print('use cache')
 					return(self.weather_cache)
 					
 		return(forecastio.load_forecast(weather_key, lat, lng, time=time, units="us").hourly().data[time.now().hour].d)
@@ -71,7 +69,6 @@ class sysfunc():
 		
 		wdata.setdefault('cloudCover', 0)
 		model.fit(np.array([wdata['cloudCover'], wdata['dewPoint'], wdata['humidity'], wdata['pressure'], wdata['windSpeed'], wdata['temperature'], wdata['windBearing'],  counted[0], counted[1], counted[2], counted[3], counted[4]]).reshape(1,-1), [value]) 
-		#print('\tlearn: ...', value)
 		joblib.dump(model, 'models/{0}/{1}.pkl'.format(extype, uid)) 
 		
 	def generatedata(self, extype, date, uid, zeros=False, autocacl=True):
