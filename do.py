@@ -10,7 +10,7 @@ import json
 from hashlib import sha1
 import hmac
 
-port = 5454 #http доступ
+port = 80 #http доступ
 os.getenv(str(port))
 
 
