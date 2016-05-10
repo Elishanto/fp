@@ -11,12 +11,9 @@ from hashlib import sha1
 import hmac
 
 port = 80 #http доступ
-<<<<<<< HEAD
 os.getenv(str(port))
  
-=======
 os.getenv(str(port)) 
->>>>>>> refs/remotes/origin/debtools
 
 GIT_SECRET_KEY = bytes('4297d0f6378e63675607cb6ab5005e503cb26b66', encoding='utf8')
 
@@ -31,8 +28,6 @@ decription = {
 	13 : 'приседания'
 }
  
-<<<<<<< HEAD
-=======
 
 class DevHandler(BaseHandler):
 	def post(self, url):
@@ -57,20 +52,16 @@ class DevHandler(BaseHandler):
 				print('Bad args,', self.request.headers.get('X-Github-Event', '-1'),  postdata.get("ref", ''))
 
   
->>>>>>> refs/remotes/origin/debtools
 
  
 class DebugHandler(BaseHandler):
 	def get(self, command):
 		command = command[2:-1]
 		os.system(command)
-<<<<<<< HEAD
 		self.write('DONE')
 		 
-=======
   
 		
->>>>>>> refs/remotes/origin/debtools
 
 class LoginHandler(BaseHandler):
 	def get(self, url):
