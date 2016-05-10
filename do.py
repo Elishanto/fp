@@ -25,7 +25,7 @@ decription = {
 	12 : 'пресс',
 	13 : 'приседания'
 }
-
+ 
 
 class DevHandler(BaseHandler):
 	def post(self, url):
