@@ -11,7 +11,7 @@ from hashlib import sha1
 import hmac
 
 port = 80 #http доступ
-os.getenv(str(port))
+os.getenv(str(port)) 
 
 
 
