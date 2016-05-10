@@ -37,13 +37,13 @@ class DevHandler(BaseHandler):
 			except BaseException:
 				return
  
-			print('debugdata', postdata)
 			if self.request.headers.get('X-Github-Event', '-1') == 'push' and postdata.get("ref", '').split('/') == 'master':
 				sh0 = self.request.headers.get('X-Hub-Signature', '-1').split('=')[-1]
 				print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n',  url,  sh0)
 				sh1 = hmac.new(GIT_SECRET_KEY, msg=self.request.body, digestmod=sha1)
 				if hmac.compare_digest(sh1.hexdigest(), sh0):
 					print('OK, GITHUB CHECKED')
+					os.system('sudo bash ../updater.sh')
 				else:
 					print('THIS IS NOT GITHUB!')
 
