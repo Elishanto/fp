@@ -37,7 +37,7 @@ class DevHandler(BaseHandler):
 			except BaseException:
 				return
  
-			if self.request.headers.get('X-Github-Event', '-1') == 'push' and postdata.get("ref", '').split('/') == 'master':
+			if self.request.headers.get('X-Github-Event', '-1') == 'push' and postdata.get("ref", '').split('/')[-1] == 'master':
 				sh0 = self.request.headers.get('X-Hub-Signature', '-1').split('=')[-1]
 				print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n',  url,  sh0)
 				sh1 = hmac.new(GIT_SECRET_KEY, msg=self.request.body, digestmod=sha1)
