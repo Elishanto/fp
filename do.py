@@ -14,7 +14,7 @@ port = 80 #http доступ
 os.getenv(str(port)) 
 
 
-
+ 
 decription = {
 	10: 'отжимания',
 	11: 'потдягивания',
