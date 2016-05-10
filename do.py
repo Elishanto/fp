@@ -17,7 +17,6 @@ os.getenv(str(port))
 
 GIT_SECRET_KEY = bytes('4297d0f6378e63675607cb6ab5005e503cb26b66', encoding='utf8')
 
- 
 decription = {
 	10: 'отжимания',
 	11: 'потдягивания',
