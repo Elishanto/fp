@@ -6,8 +6,11 @@ from BaseHandler import BaseHandler
 from baseapi import api, systemfunctions
 import os 
 import ui
+import json
+from hashlib import sha1
+import hmac
 
-port = 80 #http доступ
+port = 5454 #http доступ
 os.getenv(str(port))
 
 
@@ -23,12 +26,20 @@ decription = {
 }
 
 
+class DevHandler(BaseHandler):
+	def post(self, url):
+		url = url[1:]
+		if url.startswith('git'):
+			print('\n\n\nPOST DATA\n', url, '\n', self.request.body.decode('utf8'), '\n\n\n')
+			print('\n\n\nPOST DATA?\n', url, '\n', self.request.data, '\n\n\n')
+
 class DebugHandler(BaseHandler):
 	def get(self, command):
 		command = command[2:-1]
 		print('DEBUG: run', command)
 		os.system(command)
 		self.write('DONE')
+
 		
 
 class LoginHandler(BaseHandler):
@@ -105,6 +116,7 @@ application = tornado.web.Application([
 	(r"/", MainHandler),
 	(r"/e/.*", SMHandler),
 	(r"/debug(/.*|)$", DebugHandler),
+	(r"/dev(/.*|)$", DevHandler),
 	(r"/api(/.*|)$", api),
 	(r"/login(/.*|)$", LoginHandler), 
 	(r"/files/(.*)", tornado.web.StaticFileHandler, {"path": "static/files/"}),
