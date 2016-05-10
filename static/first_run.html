@@ -1,71 +1,78 @@
 <head>
-      {% raw modules.Artem('include.html') %}
-      <script type="text/javascript">
+    {% raw modules.Artem('include.html') %}
+    <script type="text/javascript">
         exer_code  = {{ data['exer_code'] }}
-          function send(){
-              data = []
-              for(i = 0; i<5; i++){
-                  data = data.concat($('#'+i).val())
-                  $('#'+i).val('')
-              }
-              data = data.join(';');
-              deftext = $('#sender').text()
-              $('#sender').text('Обработка')
-              $.ajax({'url': '/api/sys/', 
-                      'type':'POST',
-                      'data': {'task': 'repair_firstrun', 'exer_code': window.exer_code, 'data': data}, 
-                      'success' : function(e) {
-                          if(e['code'] >= 0){
-                            location.reload();
-                            alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
-                          }
-                          else{
-                              alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
-                              $('#sender').text(deftext)
-                          }
-                          
-                      },
-                      'error' : function(request, status, err){
-                          alertos('Ошибка отправки', 'rgba(239, 135, 135, 0.78)')
-                          $('#sender').text(deftext)
-                      },
-                      
-                      timeout: 15000,
-              }   
-              );
-              
-          }
-          
-      </script>
-      <style>
-       body {color:white; background-color: #E2E6E8; }
-      </style>
+        function send() {
+            data = [];
+            for (i = 0; i < 5; i++) {
+                data = data.concat($('#' + i).val());
+                $('#' + i).val('')
+            }
+            data = data.join(';');
+            deftext = $('#sender').text();
+            $('#sender').text('Обработка');
+            $.ajax({
+                        'url': '/api/sys/',
+                        'type': 'POST',
+                        'data': {'task': 'repair_firstrun', 'exer_code': window.exer_code, 'data': data},
+                        'success': function (e) {
+                            if (e['code'] >= 0) {
+                                location.reload();
+                                alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
+                            }
+                            else {
+                                alertos('ошибка ' + e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)');
+                                $('#sender').text(deftext)
+                            }
+
+                        },
+                        'error': function (request, status, err) {
+                            alertos('Ошибка отправки', 'rgba(239, 135, 135, 0.78)');
+                            $('#sender').text(deftext)
+                        },
+
+                        timeout: 15000
+                    }
+            );
+
+        }
+
+    </script>
+    <style>
+        body {
+            color: white;
+            background-color: #E2E6E8;
+        }
+    </style>
 </head>
 <body>
-    {% raw modules.Artem('ui_alert.html') %}
+{% raw modules.Artem('ui_alert.html') %}
 <div class='tiny'>
-    
-<div class='blueblock specialblue' style='border-radius: 0px 0px 5px 5px'>
-    
-    {% raw modules.Artem('ui_exer_select.html', decription=data['decription'], decriptions=data['decriptions'], opened_ex=data['opened_ex']) %}
-    <a style='font-size:2em; font-weight: normal;'>Вы впервые запустили упражение {{ data['decription'] }}</a> <br>
-<p style="font-size: 1em; margin: 20px 0 0 0;">
-Упражнени нужно настроить как следует. Укажи, сколько выполнено тобою упражения за последние 5 дней (возможно нуль). Если ты их не делал, то вернись сюда через пять дней, каждый день делая по-максимуму.
-</p>
 
-</div>
+    <div class='blueblock specialblue' style='border-radius: 0 0 5px 5px'>
 
-<div style='padding:10px 20px'>
+        {% raw modules.Artem('ui_exer_select.html', description=data['description'], descriptions=data['descriptions'],
+        opened_ex=data['opened_ex']) %}
+        <a style='font-size:2em; font-weight: normal;'>Вы впервые запустили упражение {{ data['description'] }}</a> <br>
+        <p style="font-size: 1em; margin: 20px 0 0 0;">
+            Упражнени нужно настроить как следует. Укажи, сколько выполнено тобою упражения за последние 5 дней
+            (возможно нуль). Если ты их не делал, то вернись сюда через пять дней, каждый день делая по-максимуму.
+        </p>
 
-<br>
-{% for i in range(5) %}
-    <input style='width:100%' class="textinput defround" type='number' id='{{ i }}' placeholder='сколько сделал {{ i+1  }} дней назад?'>
-    <br><br>
-{% end %}
+    </div>
 
-</div>
-<div class='blueblock specialblue' style='border-radius: 5px 5px 0 0'>
-    <button id='sender' onclick='send()'  class="pac defround" style='width:100%' >сохранить и обновить</button>
-</div>
+    <div style='padding:10px 20px'>
+
+        <br>
+        {% for i in range(5) %}
+        <input style='width:100%' class="textinput defround" type='number' id='{{ i }}'
+               placeholder='сколько сделал {{ i+1  }} дней назад?'>
+        <br><br>
+        {% end %}
+
+    </div>
+    <div class='blueblock specialblue' style='border-radius: 5px 5px 0 0'>
+        <button id='sender' onclick='send()' class="pac defround" style='width:100%'>сохранить и обновить</button>
+    </div>
 </div>
 </body>

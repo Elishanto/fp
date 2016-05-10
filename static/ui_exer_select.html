@@ -1,30 +1,31 @@
 <div id='UI_EXER_SELECT' style='width:100%; text-align:center;     text-align: center;  position: relative; '>
-  <img src="/files/plogo.png" style="
+    <img src="/files/plogo.png" style="
     position: absolute;
     left: 10px;
     top: 0px;
     width: 54px;
 " href="/">
 
-<button style="
+    <button style="
         margin-bottom: 50px;/* background: none; */
         border: 1px solid rgb(103, 143, 239);
         /* border: none; */background-color: #486CEE;
-        font-family: 'ProximaNova-Regular';
+        font-family: 'ProximaNova-Regular',serif;
         color: white;
-        font-size: 16px;
-        text-shadow: 0 2px 1px rgba(255, 255, 255, 0.5);
         padding: 5px 15px;
         border-radius: 30px;
         outline: none;
         text-shadow: 0px 2px 0.58px rgba(0,0,0,0.15);
         
-        font-size: 1em;" onclick="if($('.alertmenu').css('display') == 'block'){$('.alertmenu').animate({'margin-top':'-45px', 'opacity':'0'}, 100, function(){$('.alertmenu').css({'display':'none'}) })} else{$('.alertmenu').css({'display':'block'}).animate({'margin-top':'-40px', 'opacity':'1'}, 100)}">{{data['decription']}}</button>
-        
-        <div   class='alertmenu'>
-          {% for i in data['opened_ex'] %}
-          <button onclick="location.replace('/e/{{i}}')">{{ data['decriptions'][i] }}</button>
-          {% end %}
-          </div>
-          
+        font-size: 1em;"
+            onclick="if($('.alertmenu').css('display') == 'block'){$('.alertmenu').animate({'margin-top':'-45px', 'opacity':'0'}, 100, function(){$('.alertmenu').css({'display':'none'}) })} else{$('.alertmenu').css({'display':'block'}).animate({'margin-top':'-40px', 'opacity':'1'}, 100)}">
+        {{data['description']}}
+    </button>
+
+    <div class='alertmenu'>
+        {% for i in data['opened_ex'] %}
+        <button onclick="location.replace('/e/{{i}}')">{{ data['descriptions'][i] }}</button>
+        {% end %}
+    </div>
+
 </div>

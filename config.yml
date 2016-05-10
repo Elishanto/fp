@@ -1,0 +1,17 @@
+lat: 55.27
+lng: 65.20
+formats:
+  - png
+  - jpg
+  - jpeg
+  - gif
+weather_key: 5c256d08f6b478fdb0d1dded1fcaae44
+description:
+  10: отжимания
+  11: потдягивания
+  54: поедание круасанчиков
+  777: жокирство
+  778: чтение
+  12: пресс
+  13: приседания
+GIT_SECRET_KEY: 4297d0f6378e63675607cb6ab5005e503cb26b66
