@@ -61,7 +61,6 @@ class api(BaseHandler):
 
 	@tornado.web.authenticated
 	def post(self, z=None):
-		print(z)
 		self.data = { "exer" : (10,11,54, 777, 6698, 778, 12, 13)} #общедоступные упражнения
 
 			
@@ -125,7 +124,6 @@ class api(BaseHandler):
 							self.write(self.generate_request_return(-21))
 							self.finish()
 						else:
-							print('***', ftype, len(avatar))
 							
 							for i in formats: 
 								try: os.remove('static/files/users/{0}.{1}'.format(user, i))
@@ -189,7 +187,6 @@ class api(BaseHandler):
 						self.database['data.{0}.stat'.format(self.get_current_user())].update({'ex': exer_code}, {'$inc': {'_all':ndone, '_count':1}}, upsert=True)
 						self.database['data.{0}'.format(self.get_current_user())].update({'ex': exer_code}, {'$inc':{str(day.date()): ndone } }, upsert=True) 
 						
-						#print('data.{0}.stat'.format(self.get_current_user()))
 						
 					for i in range(1, 6):
 						day = datetime.datetime.now() - datetime.timedelta(days=i)
@@ -205,7 +202,6 @@ class api(BaseHandler):
 				if lake == 'global':
 					allowed = ('name', 'email', 'wt', 'ht')
 					task = json.loads(self.get_argument("aim").strip())
-					print('***\n',task)
 					for i in task.keys():
 						if i not in allowed:
 							self.write(self.generate_request_return(-90))
@@ -214,7 +210,6 @@ class api(BaseHandler):
 					self.write(self.generate_request_return(1))
 					
 		except ZeroDivisionError as e:
-			print(e)
 			self.write(self.generate_request_return())
 
 

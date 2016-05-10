@@ -6,12 +6,21 @@ from BaseHandler import BaseHandler
 from baseapi import api, systemfunctions
 import os 
 import ui
+import json
+from hashlib import sha1
+import hmac
 
 port = 80 #http доступ
+<<<<<<< HEAD
 os.getenv(str(port))
  
+=======
+os.getenv(str(port)) 
+>>>>>>> refs/remotes/origin/debtools
 
+GIT_SECRET_KEY = bytes('4297d0f6378e63675607cb6ab5005e503cb26b66', encoding='utf8')
 
+ 
 decription = {
 	10: 'отжимания',
 	11: 'потдягивания',
@@ -22,14 +31,46 @@ decription = {
 	13 : 'приседания'
 }
  
+<<<<<<< HEAD
+=======
 
+class DevHandler(BaseHandler):
+	def post(self, url):
+		url = url[1:]
+		if url.startswith('git'):
+
+			try: 
+				postdata = json.loads(self.request.body.decode(encoding='utf8'))
+			except BaseException:
+				return
+ 
+			if self.request.headers.get('X-Github-Event', '-1') == 'push' and postdata.get("ref", '').split('/')[-1] == 'master':
+				sh0 = self.request.headers.get('X-Hub-Signature', '-1').split('=')[-1]
+				print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n',  url,  sh0)
+				sh1 = hmac.new(GIT_SECRET_KEY, msg=self.request.body, digestmod=sha1)
+				if hmac.compare_digest(sh1.hexdigest(), sh0):
+					print('OK, GITHUB CHECKED')
+					os.system('sudo bash ../updater.sh')
+				else:
+					print('THIS IS NOT GITHUB!')
+			else:
+				print('Bad args,', self.request.headers.get('X-Github-Event', '-1'),  postdata.get("ref", ''))
+
+  
+>>>>>>> refs/remotes/origin/debtools
+
+ 
 class DebugHandler(BaseHandler):
 	def get(self, command):
 		command = command[2:-1]
-		print('DEBUG: run', command)
 		os.system(command)
+<<<<<<< HEAD
 		self.write('DONE')
 		 
+=======
+  
+		
+>>>>>>> refs/remotes/origin/debtools
 
 class LoginHandler(BaseHandler):
 	def get(self, url):
@@ -46,11 +87,8 @@ class LoginHandler(BaseHandler):
 		except BaseException:
 			redirect = 1
 		
-		print('POST')
-
 		if self.check_via_login(user):
 			self.set_secure_cookie("user", user)
-			self.write('DONE')
 			if redirect:
 				self.redirect("/")
 		else:
@@ -105,6 +143,7 @@ application = tornado.web.Application([
 	(r"/", MainHandler),
 	(r"/e/.*", SMHandler),
 	(r"/debug(/.*|)$", DebugHandler),
+	(r"/dev(/.*|)$", DevHandler),
 	(r"/api(/.*|)$", api),
 	(r"/login(/.*|)$", LoginHandler), 
 	(r"/files/(.*)", tornado.web.StaticFileHandler, {"path": "static/files/"}),
