@@ -29,7 +29,7 @@ class DebugHandler(BaseHandler):
 		print('DEBUG: run', command)
 		os.system(command)
 		self.write('DONE')
-		
+		 
 
 class LoginHandler(BaseHandler):
 	def get(self, url):
