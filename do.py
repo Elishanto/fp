@@ -13,7 +13,7 @@ import hmac
 port = 80 #http доступ
 os.getenv(str(port)) 
 
-GIT_SECRET_KEY = '4297d0f6378e63675607cb6ab5005e503cb26b66'
+GIT_SECRET_KEY = bytes('4297d0f6378e63675607cb6ab5005e503cb26b66', encoding='utf8')
 
  
 decription = {
@@ -32,7 +32,7 @@ class DevHandler(BaseHandler):
 		url = url[1:]
 		if url.startswith('git'):
 			print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n',  url,  self.request.headers.get('X-Hub-Signature', '-1'))
-			sh1 = hmac.new(bytes(GIT_SECRET_KEY, encoding='utf8'), msg=bytes(self.request.body, encoding='utf8'), digestmod=sha1)
+			sh1 = hmac.new(GIT_SECRET_KEY, msg=self.request.body, digestmod=sha1)
 			if hmac.compare_digest(sh1.hexdigest(), self.request.headers.get('X-Hub-Signature', '-1')):
 				print('OK, GITHUB CHECKED')
 			else:
