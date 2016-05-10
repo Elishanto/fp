@@ -46,6 +46,8 @@ class DevHandler(BaseHandler):
 					os.system('sudo bash ../updater.sh')
 				else:
 					print('THIS IS NOT GITHUB!')
+			else:
+				print('Bad args,', self.request.headers.get('X-Github-Event', '-1'),  postdata.get("ref", ''))
 
   
 
