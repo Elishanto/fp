@@ -16,7 +16,7 @@ import yaml
 
 from BaseHandler import BaseHandler
 
-config = yaml.load(open('config.yml', 'rb'))
+config = yaml.load(open('localdata/config.yml', 'rb'))
 lat, lng = config['lat'], config['lng']
 formats = config['formats']
 weather_key = config['weather_key']
