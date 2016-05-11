@@ -14,9 +14,9 @@ class DevHandler(BaseHandler):
                 postdata = json.loads(self.request.body.decode(encoding='utf8'))
             except BaseException:
                 return
-            print(self.request.headers)
+            print(self.request.headers.__dict__())
             if self.request.headers.get('X-Github-Event', '-1') == 'push' \
-                    and postdata.get("ref", '').split('/')[-1] == 'master':
+                    and postdata.get("ref", '').split('/')[-1] == os.environ['GIT_BRANCH']:
                 sh0 = self.request.headers.get('X-Hub-Signature', '-1').split('=')[-1]
                 print('\n~~~~~~~~~ git updating session ~~~~~~~~~\n', url, sh0)
                 sh1 = hmac.new(bytes(os.environ['GIT_SECRET_KEY'], encoding='utf8'), msg=self.request.body,
