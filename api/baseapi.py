@@ -113,10 +113,10 @@ class Api(BaseHandler):
 
                         for i in self.formats:
                             try:
-                                os.remove('static/files/users/{0}.{1}'.format(user, i))
+                                os.remove('../static/files/users/{0}.{1}'.format(user, i))
                             except FileNotFoundError:
                                 pass
-                        fu = open('static/files/users/{0}.{1}'.format(user, ftype), 'wb+')
+                        fu = open('../static/files/users/{0}.{1}'.format(user, ftype), 'wb+')
 
                         self.set_data({'id': int(self.get_current_user())}, 'users',
                                       {'imgurl': '{0}.{1}'.format(user, ftype)})

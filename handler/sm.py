@@ -24,8 +24,8 @@ class SMHandler(BaseHandler):
 
             bsdk = set(basedata['data'].keys())
             if 'name' not in bsdk or 'email' not in bsdk or 'wt' not in bsdk or 'ht' not in bsdk:
-                self.render('static/ui_setuserdata.html', data=basedata)
+                self.render('../static/ui_setuserdata.html', data=basedata)
             elif self.database['data.{0}'.format(self.get_current_user())]['stat'].find_one({'ex': ex}) is None:
-                self.render('static/first_run.html', data=basedata)
+                self.render('../static/first_run.html', data=basedata)
             else:
-                self.render('static/main_activity.html', data=basedata)
+                self.render('../static/main_activity.html', data=basedata)

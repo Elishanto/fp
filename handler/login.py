@@ -7,7 +7,7 @@ class LoginHandler(BaseHandler):
             self.clear_cookie("user")
             self.redirect("/")
 
-        self.render('static/login_activity.html', result=None)
+        self.render('../static/login_activity.html', result=None)
 
     def post(self, url=None):
         user = self.get_argument("name")
@@ -21,4 +21,4 @@ class LoginHandler(BaseHandler):
             if redirect:
                 self.redirect("/")
         else:
-            self.render('static/login_activity.html', result='это ложь')
+            self.render('../static/login_activity.html', result='это ложь')
