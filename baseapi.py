@@ -249,12 +249,12 @@ class SysFunc:
         Обучение (и формирование) модели машинного обучения
         """
         try:
-            os.makedirs('models/' + str(extype))
+            os.makedirs('localdata/models/' + str(extype))
         except FileExistsError:
             pass
 
         try:
-            model = joblib.load('models/{0}/{1}.pkl'.format(extype, uid))
+            model = joblib.load('localdata/models/{0}/{1}.pkl'.format(extype, uid))
         except FileNotFoundError:
             model = RandomForestRegressor(n_estimators=54, max_features='sqrt')
 
@@ -265,7 +265,7 @@ class SysFunc:
             [wdata['cloudCover'], wdata['dewPoint'], wdata['humidity'], wdata['pressure'], wdata['windSpeed'],
              wdata['temperature'], wdata['windBearing'], counted[0], counted[1], counted[2], counted[3],
              counted[4]]).reshape(1, -1), [value])
-        joblib.dump(model, 'models/{0}/{1}.pkl'.format(extype, uid))
+        joblib.dump(model, 'localdata/models/{0}/{1}.pkl'.format(extype, uid))
 
     def generatedata(self, extype, date, uid):
         """
@@ -289,7 +289,7 @@ class SysFunc:
         """
         Функция прогноза последующего выполнении на основе машинного обучения
         """
-        model = joblib.load('models/{0}/{1}.pkl'.format(extype, uid))  # открытие существующей модели
+        model = joblib.load('localdata/models/{0}/{1}.pkl'.format(extype, uid))  # открытие существующей модели
         if period <= 1:  # period - длительность необходимого прогноза
             wdata, counted = self.generatedata(extype, date, uid)
             return (round(model.predict(np.array([wdata['cloudCover'], wdata['dewPoint'],

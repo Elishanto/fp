@@ -2,7 +2,6 @@ import hmac
 import json
 import os
 from hashlib import sha1
-
 import tornado
 import tornado.auth
 import tornado.httpserver
@@ -11,11 +10,14 @@ import ui
 from BaseHandler import BaseHandler
 from baseapi import Api, systemfunctions
 import yaml
+import shutil
 
-port = 8000  # http доступ
-config = yaml.load(open('config.yml', 'rb'))
-os.getenv(str(port))
+if not os.path.exists('localdata'):
+	shutil.copytree('basedata/', 'localdata/')
 
+config = yaml.load(open('localdata/config.yml', 'rb'))
+
+port = int(config['port']) 
 os.getenv(str(port))
 
 GIT_SECRET_KEY = bytes(config['GIT_SECRET_KEY'], encoding='utf8')
@@ -40,7 +42,7 @@ class DevHandler(BaseHandler):
                 sh1 = hmac.new(GIT_SECRET_KEY, msg=self.request.body, digestmod=sha1)
                 if hmac.compare_digest(sh1.hexdigest(), sh0):
                     print('OK, GITHUB CHECKED')
-                    os.system('bash ../updater.sh')
+                    os.system('bash localdata/updater.sh')
                 else:
                     print('THIS IS NOT GITHUB!')
             else:
@@ -132,6 +134,6 @@ application = tornado.web.Application([
 ], **settings)
 
 http_server = tornado.httpserver.HTTPServer(application)
-http_server.listen(port)  # , address='0.0.0.0')
+http_server.listen(port) 
 print('started')
 tornado.ioloop.IOLoop.current().start()
