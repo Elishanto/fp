@@ -3,6 +3,7 @@ from handler import BaseHandler
 import hmac
 from hashlib import sha1
 import os
+import subprocess
 
 
 class DevHandler(BaseHandler):
@@ -23,7 +24,7 @@ class DevHandler(BaseHandler):
                                digestmod=sha1)
                 if hmac.compare_digest(sh1.hexdigest(), sh0):
                     print('OK, GITHUB CHECKED\nBRANCH "{}"'.format(os.environ['GIT_BRANCH']))
-                    os.system('bash localdata/updater.sh ' + os.environ['GIT_BRANCH'])
+                    subprocess.call('bash localdata/updater.sh ' + os.environ['GIT_BRANCH'], shell=True)
                 else:
                     print('THIS IS NOT GITHUB!')
             else:
