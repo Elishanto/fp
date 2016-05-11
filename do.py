@@ -1,9 +1,4 @@
 import os
-import shutil
-
-if not os.path.exists('localdata'):
-	shutil.copytree('basedata/', 'localdata/')
-
 import hmac
 import json
 from hashlib import sha1
@@ -11,22 +6,13 @@ import tornado
 import tornado.auth
 import tornado.httpserver
 import tornado.web
-import ui
 from BaseHandler import BaseHandler
-from baseapi import Api, systemfunctions
-import yaml
+from baseapi import systemfunctions, Api
+import ui
 
+GIT_SECRET_KEY = bytes(os.environ['GIT_SECRET_KEY'], encoding='utf8')
 
-
-
-config = yaml.load(open('localdata/config.yml', 'rb'))
-
-port = int(config['port']) 
-os.getenv(str(port))
-
-GIT_SECRET_KEY = bytes(config['GIT_SECRET_KEY'], encoding='utf8')
-
-description = config['description']
+description = os.environ['description']
 
 
 class DevHandler(BaseHandler):
@@ -55,7 +41,7 @@ class DevHandler(BaseHandler):
 
 class DebugHandler(BaseHandler):
     def get(self, command):
-        command = command[2:-1]
+        # command = command[2:-1]
         # os.system(command)
         self.write('calcelled')
 
@@ -118,26 +104,27 @@ class SMHandler(BaseHandler):
                 self.render('static/main_activity.html', data=basedata)
 
 
-settings = {
-    "cookie_secret": "*****",
-    "login_url": "/login",
-    # "xsrf_cookies": True,
-    'debug': True,
-    "ui_modules": ui,
+def start(port):
+    settings = {
+        "cookie_secret": "*****",
+        "login_url": "/login",
+        # "xsrf_cookies": True,
+        'debug': True,
+        "ui_modules": ui,
 
-}
+    }
 
-application = tornado.web.Application([
-    (r"/", MainHandler),
-    (r"/e/.*", SMHandler),
-    (r"/debug(/.*|)$", DebugHandler),
-    (r"/dev(/.*|)$", DevHandler),
-    (r"/api(/.*|)$", Api),
-    (r"/login(/.*|)$", LoginHandler),
-    (r"/files/(.*)", tornado.web.StaticFileHandler, {"path": "static/files/"}),
-], **settings)
+    application = tornado.web.Application([
+        (r"/", MainHandler),
+        (r"/e/.*", SMHandler),
+        (r"/debug(/.*|)$", DebugHandler),
+        (r"/dev(/.*|)$", DevHandler),
+        (r"/api(/.*|)$", Api),
+        (r"/login(/.*|)$", LoginHandler),
+        (r"/files/(.*)", tornado.web.StaticFileHandler, {"path": "static/files/"}),
+    ], **settings)
 
-http_server = tornado.httpserver.HTTPServer(application)
-http_server.listen(port) 
-print('started')
-tornado.ioloop.IOLoop.current().start()
+    http_server = tornado.httpserver.HTTPServer(application)
+    http_server.listen(port)
+    print('started')
+    tornado.ioloop.IOLoop.current().start()

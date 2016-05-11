@@ -2,6 +2,8 @@ import imghdr
 import json
 import datetime
 import os
+import shutil
+import yaml
 from math import sqrt
 
 import forecastio
@@ -12,21 +14,24 @@ from sklearn.externals import joblib
 import tornado
 import tornado.auth
 import tornado.web
-import yaml
 
 from BaseHandler import BaseHandler
 
+if not os.path.exists('localdata'):
+    shutil.copytree('basedata/', 'localdata/')
 config = yaml.load(open('localdata/config.yml', 'rb'))
-lat, lng = config['lat'], config['lng']
-formats = config['formats']
-weather_key = config['weather_key']
-description = config['description']
+for var, value in config.items():
+    os.environ[var] = str(value)
 
 
 class Api(BaseHandler):
     def __init__(self, application, request, **kwargs):
         super().__init__(application, request, **kwargs)
         self.data = {"exer": (10, 11, 54, 777, 6698, 778, 12, 13)}  # общедоступные упражнения
+        self.lat, self.ng = os.environ['lat'], os.environ['lng']
+        self.formats = eval(os.environ['formats'])
+        self.weather_key = os.environ['weather_key']
+        self.description = os.environ['description']
 
     @staticmethod
     def generate_request_return(error=-5454):
@@ -118,12 +123,12 @@ class Api(BaseHandler):
                     if len(avatar) > 540000:
                         self.write(self.generate_request_return(-20))
                         self.finish()
-                    elif ftype not in formats:
+                    elif ftype not in self.formats:
                         self.write(self.generate_request_return(-21))
                         self.finish()
                     else:
 
-                        for i in formats:
+                        for i in self.formats:
                             try:
                                 os.remove('static/files/users/{0}.{1}'.format(user, i))
                             except FileNotFoundError:
@@ -220,10 +225,10 @@ class SysFunc:
         self.weather_cache = None
         self.database = database
         self.weather_cache_time = None
-        self.lat, self.lng = config['lat'], config['lng']
-        self.formats = config['formats']
-        self.weather_key = config['weather_key']
-        self.description = config['description']
+        self.lat, self.lng = os.environ['lat'], os.environ['lng']
+        self.formats = eval(os.environ['formats'])
+        self.weather_key = os.environ['weather_key']
+        self.description = os.environ['description']
 
     def get_weather(self, lat_, lng_, time):
         """
