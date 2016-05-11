@@ -95,7 +95,6 @@ class SMHandler(BaseHandler):
             basedata['data']['avatar'] = systemfunctions.get_user_url(self.get_current_user())
 
             bsdk = set(basedata['data'].keys())
-            print(bsdk, ('name' not in bsdk), ('email' not in bsdk), ('wt' not in bsdk), ('ht' not in bsdk))
             if 'name' not in bsdk or 'email' not in bsdk or 'wt' not in bsdk or 'ht' not in bsdk:
                 self.render('static/ui_setuserdata.html', data=basedata)
             elif self.database['data.{0}'.format(self.get_current_user())]['stat'].find_one({'ex': ex}) is None:
