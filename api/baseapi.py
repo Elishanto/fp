@@ -4,7 +4,7 @@ import datetime
 import imghdr
 import json
 import tornado
-from .sysfunc import SysFunc
+import api.sysfunc
 
 
 class Api(BaseHandler):
@@ -77,7 +77,7 @@ class Api(BaseHandler):
                     # получнеие данных
                     exer_code = int(self.get_argument("exer_code"))
                     if int(exer_code) in self.data['exer']:
-                        predval = SysFunc(self.database).predict_data(exer_code, datetime.datetime.now(),
+                        predval = api.sysfunc.SysFunc(self.database).predict_data(exer_code, datetime.datetime.now(),
                                                                self.get_current_user())
                         plnday = self.database['data.{0}'.format(self.get_current_user())]['stat'].find_one(
                             {'ex': exer_code}, {'_count': 1})['_count']
@@ -95,7 +95,7 @@ class Api(BaseHandler):
                     # МЕТОД API: работа с планом
                     exer_code = int(self.get_argument("exer_code"))
                     if int(exer_code) in self.data['exer']:
-                        self.write(SysFunc(self.database).plan(self.get_current_user(), exer_code))
+                        self.write(api.sysfunc.SysFunc(self.database).plan(self.get_current_user(), exer_code))
 
                 elif jtype == 'file':
                     # работа с файлами
@@ -180,7 +180,7 @@ class Api(BaseHandler):
                     for i in range(1, 6):
                         day = datetime.datetime.now() - datetime.timedelta(days=i)
                         ndone = pushdata[i - 1]
-                        SysFunc(self.database).fit_data(exer_code, ndone, day, self.get_current_user())
+                        api.sysfunc.SysFunc(self.database).fit_data(exer_code, ndone, day, self.get_current_user())
 
                     self.database['data.{0}.stat'.format(self.get_current_user())].update({'ex': exer_code},
                                                                                           {'$set': {'before': sa // 5}})

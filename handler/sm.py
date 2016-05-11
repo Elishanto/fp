@@ -1,10 +1,8 @@
 import os
 import tornado
 from handler import BaseHandler
-from api.sysfunc import SysFunc
-from api.baseapi import Api
-
-print(vars())
+import api.sysfunc
+import api.baseapi
 
 description = os.environ['description']
 
@@ -21,8 +19,8 @@ class SMHandler(BaseHandler):
         else:
             basedata = {'data': self.get_user_info(self.get_current_user(), ['name', 'email', 'wt', 'ht']),
                         'exer_code': ex, 'description': description[ex], 'opened_ex': opened_ex,
-                        'descriptions': description, 'avatar': SysFunc(Api.database).get_user_url(self.get_current_user())}
-            basedata['data']['avatar'] = SysFunc(Api.database).get_user_url(self.get_current_user())
+                        'descriptions': description, 'avatar': api.sysfunc.SysFunc(api.baseapi.Api.database).get_user_url(self.get_current_user())}
+            basedata['data']['avatar'] = api.sysfunc.SysFunc(api.baseapi.Api.database).get_user_url(self.get_current_user())
 
             bsdk = set(basedata['data'].keys())
             if 'name' not in bsdk or 'email' not in bsdk or 'wt' not in bsdk or 'ht' not in bsdk:

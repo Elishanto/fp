@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.externals import joblib
 from math import sqrt
-from .baseapi import Api
+import api.baseapi
 
 
 class SysFunc:
@@ -117,7 +117,7 @@ class SysFunc:
         try:
             future = self.predict_data(extype, datetime.datetime.now(), uid, period=pediod)
         except IndexError:
-            return Api.generate_request_return(-12)
+            return api.baseapi.Api.generate_request_return(-12)
         plan = []
 
         try:
