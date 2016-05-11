@@ -19,7 +19,7 @@ class BaseHandler(tornado.web.RequestHandler):
         if self.check_via_login(t):
             return t
         else:
-            print('пользователь удалён')
+            pass
 
     def check_via_login(self, login):
         try:
@@ -32,12 +32,9 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_user_info(self, uid, task=None):
         if task is None:
             task = []
-        print('\t get', uid, task)
         if len(task) == 0:
-            print('\treturn', self.database['users'].find_one({'id': uid}), '\n')
             return self.database['users'].find_one({'id': uid})
 
-        print('\t return', self.database['users'].find_one({'id': uid}, dict(zip(task, [1] * len(task)))), '\n')
         return self.database['users'].find_one({'id': uid}, dict(zip(task, [1] * len(task))))
 
     def push_data(self, identificator, path, task):
@@ -45,5 +42,4 @@ class BaseHandler(tornado.web.RequestHandler):
             self.database[path].update(identificator, {'$pushAll': task})
 
     def set_data(self, identificator, path, task):
-        print(task, path, identificator, task)
         self.database[path].update(identificator, {'$set': task}, False, True)
