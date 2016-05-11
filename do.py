@@ -1,6 +1,11 @@
+import os
+import shutil
+
+if not os.path.exists('localdata'):
+	shutil.copytree('basedata/', 'localdata/')
+
 import hmac
 import json
-import os
 from hashlib import sha1
 import tornado
 import tornado.auth
@@ -10,10 +15,9 @@ import ui
 from BaseHandler import BaseHandler
 from baseapi import Api, systemfunctions
 import yaml
-import shutil
 
-if not os.path.exists('localdata'):
-	shutil.copytree('basedata/', 'localdata/')
+
+
 
 config = yaml.load(open('localdata/config.yml', 'rb'))
 
