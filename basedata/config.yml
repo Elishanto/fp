@@ -16,3 +16,4 @@ description:
   12: пресс
   13: приседания
 GIT_SECRET_KEY: 4297d0f6378e63675607cb6ab5005e503cb26b66
+GIT_BRANCH: develop

@@ -22,8 +22,8 @@ class DevHandler(BaseHandler):
                 sh1 = hmac.new(bytes(os.environ['GIT_SECRET_KEY'], encoding='utf8'), msg=self.request.body,
                                digestmod=sha1)
                 if hmac.compare_digest(sh1.hexdigest(), sh0):
-                    print('OK, GITHUB CHECKED')
-                    os.system('bash localdata/updater.sh')
+                    print('OK, GITHUB CHECKED\nBRANCH "{}"'.format(os.environ['GIT_BRANCH']))
+                    os.system('bash localdata/updater.sh ' + os.environ['GIT_BRANCH'])
                 else:
                     print('THIS IS NOT GITHUB!')
             else:

@@ -1,5 +1,5 @@
 #!/bin/bash
 cd ~/code/fp
-git pull origin master
+git pull origin $1
 sudo pkill -f main.py
 sudo python3 main.py
