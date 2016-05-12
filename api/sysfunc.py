@@ -8,6 +8,7 @@ from math import sqrt
 from api.baseapi import Api
 import bcrypt
 
+
 class SysFunc:
     def __init__(self, database):
         self.weather_cache = None
@@ -190,17 +191,17 @@ class SysFunc:
 
         return int(eval(str(now) + zoom[(x + 1) % 7]))  # умножение
 
-
-    def user_processpassword(self, **userdata):
+    def user_process_password(self, **userdata):
         """
         We need:
             * password
             * userid
         RETURN BYTES
         """
-        return( bcrypt.hashpw( bytes(str(int(userdata['userid']) ** 3 %15 ) + userdata['password'] + 'FORID' + str(userdata['userid']) ), bcrypt.gensalt()) )
+        return (bcrypt.hashpw(
+            bytes(str(int(userdata['userid']) ** 3 % 15) + userdata['password'] + 'FORID' + str(userdata['userid'])),
+            bcrypt.gensalt()))
 
-
-    #PUBLIC METHOD
-    def chechpass(self, userid, variant):
+    # PUBLIC METHOD
+    def checkpass(self, userid, variant):
         pass
