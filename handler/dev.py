@@ -24,7 +24,7 @@ class DevHandler(BaseHandler):
                                digestmod=sha1)
                 if hmac.compare_digest(sh1.hexdigest(), sh0):
                     print('OK, GITHUB CHECKED\nBRANCH "{}"'.format(os.environ['GIT_BRANCH']))
-                    subprocess.call('localdata/updater.sh ' + os.environ['GIT_BRANCH'], shell=True)
+                    subprocess.Popen(['localdata/updater.sh', os.environ['GIT_BRANCH']])
                 else:
                     print('THIS IS NOT GITHUB!')
             else:
