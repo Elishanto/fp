@@ -191,16 +191,35 @@ class SysFunc:
         return int(eval(str(now) + zoom[(x + 1) % 7]))  # умножение
 
 
+    def user_checkpassword(self, **userdata):
+        tp = bytes(self.get_user_info(int( userdata['userid'] ), task=['password']).get('password', ''), encoding='utf8')
+        """
+        We need:
+            * check_password
+            * userid
+        RETURN bool
+        """
+        userinfo = bytes( str(int(userdata['userid']) ** 3 %15 ) \
+                                     + userdata['check_password'] + 'FORID' + str(userdata['userid']), encoding='utf8' )
+        
+        return(bcrypt.hashpw(userinfo, tp) == tp)
+
+
     def user_processpassword(self, **userdata):
         """
         We need:
             * password
             * userid
-        RETURN BYTES
+        RETURN str
         """
-        return( bcrypt.hashpw( bytes(str(int(userdata['userid']) ** 3 %15 ) + userdata['password'] + 'FORID' + str(userdata['userid']) ), bcrypt.gensalt()) )
+        return( bcrypt.hashpw( bytes( str(int(userdata['userid']) ** 3 %15 ) \
+                                     + userdata['password'] + 'FORID' + str(userdata['userid']), encoding='utf8' ), bcrypt.gensalt()).decode('utf8') )
 
-
-    #PUBLIC METHOD
-    def chechpass(self, userid, variant):
-        pass
+    def user_setuppassword(self, **userdata):
+        """
+        We need:
+            * OLD password (if it was)
+            * userid
+            * new passwjrd
+        RETURN bool
+        """
