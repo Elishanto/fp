@@ -8,6 +8,7 @@ from math import sqrt
 from api.baseapi import Api
 import bcrypt
 
+
 class SysFunc:
     def __init__(self, database):
         self.weather_cache = None
@@ -190,32 +191,30 @@ class SysFunc:
 
         return int(eval(str(now) + zoom[(x + 1) % 7]))  # умножение
 
-
-    def user_checkpassword(self, **userdata):
-        tp = bytes(self.get_user_info(int( userdata['userid'] ), task=['password']).get('password', ''), encoding='utf8')
+    def user_check_password(self, **userdata):
+        tp = bytes(self.get_user_info(int(userdata['userid']), task=['password']).get('password', ''), encoding='utf8')
         """
         We need:
             * check_password
             * userid
         RETURN bool
         """
-        userinfo = bytes( str(int(userdata['userid']) ** 3 %15 ) \
-                                     + userdata['check_password'] + 'FORID' + str(userdata['userid']), encoding='utf8' )
-        
-        return(bcrypt.hashpw(userinfo, tp) == tp)
+        userinfo = bytes(str(int(userdata['userid']) ** 3 % 15) + userdata['check_password'] + 'FORID' + str(
+            userdata['userid']), encoding='utf8')
 
+        return bcrypt.hashpw(userinfo, tp) == tp
 
-    def user_processpassword(self, **userdata):
+    def user_process_password(self, **userdata):
         """
         We need:
             * password
             * userid
         RETURN str
         """
-        return( bcrypt.hashpw( bytes( str(int(userdata['userid']) ** 3 %15 ) \
-                                     + userdata['password'] + 'FORID' + str(userdata['userid']), encoding='utf8' ), bcrypt.gensalt()).decode('utf8') )
+        return (bcrypt.hashpw(bytes(str(int(userdata['userid']) ** 3 % 15) + userdata['password'] + 'FORID' + str(
+            userdata['userid']), encoding='utf8'), bcrypt.gensalt()).decode('utf8'))
 
-    def user_setuppassword(self, **userdata):
+    def user_setup_password(self, **userdata):
         """
         We need:
             * OLD password (if it was)
