@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.externals import joblib
 from math import sqrt
 from api.baseapi import Api
-
+import bcrypt
 
 class SysFunc:
     def __init__(self, database):
@@ -185,10 +185,22 @@ class SysFunc:
                 # hard_work_days = 2
                 zoom = '*1,*1.25, +1, +2 ,+3, +1,*0.9,+3'.split(',')
 
-        # growpc_coef = 2 ** strategy * ((goal - now) / now) / hard_work_days  # >0 жэ если рост
-        # workday = int(7 / hard_work_days)
-        # influence = []
         for i in range((x + 1) // 7):
             now = int(eval(str(now) + zoom[-1]))
 
         return int(eval(str(now) + zoom[(x + 1) % 7]))  # умножение
+
+
+    def user_processpassword(self, **userdata):
+        """
+        We need:
+            * password
+            * userid
+        RETURN BYTES
+        """
+        return( bcrypt.hashpw( bytes(str(int(userdata['userid']) ** 3 %15 ) + userdata['password'] + 'FORID' + str(userdata['userid']) ), bcrypt.gensalt()) )
+
+
+    #PUBLIC METHOD
+    def chechpass(self, userid, variant):
+        pass
