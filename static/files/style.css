@@ -177,10 +177,8 @@
         
         .tiny{
 
-        width: 40%;
+        width: 100%;
         margin: 0 auto;
-        min-width: 400px;
-        max-width: 500px;
         box-sizing: border-box;
         }
         .specialblue{ 
