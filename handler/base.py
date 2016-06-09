@@ -27,7 +27,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def check_valid_login(self, login):
         try:
             return(self.database['users'].find_one({'email': login})['valid'] == 1)
-        except IndexError:
+        except BaseException:
             return(False)
 
     def check_via_login(self, login, password):
