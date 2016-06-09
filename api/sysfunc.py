@@ -6,7 +6,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.externals import joblib
 from math import sqrt
 from api.baseapi import Api
-import bcrypt
 
 
 class SysFunc:
