@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-nID = 54
+nID = 2
 
 print('Try to connect to mongo. Default command - mongod')
 client = MongoClient()

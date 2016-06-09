@@ -21,10 +21,12 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             pass
 
-    def check_via_login(self, login):
+    def check_via_login(self, login, pass):
         try:
             if self.database['users'].find_one({'id': int(login)})['valid'] == 1:
-                return True
+                if self.user_check_password({ 'userid':login, "check_password":pass}):
+                    return True
+                return False #Bad password!
         except (TypeError, ValueError):
             pass
         return False
@@ -48,3 +50,36 @@ class BaseHandler(tornado.web.RequestHandler):
         task['id'] = self.database[path].count() + 1
         task['valid'] = 1
         self.database[path].insert_one(task)
+
+
+    def user_check_password(self, **userdata):
+        tp = bytes(self.get_user_info(int(userdata['userid']), task=['password']).get('password', ''), encoding='utf8')
+        """
+        We need:
+            * check_password
+            * userid
+        RETURN bool
+        """
+        userinfo = bytes(str(int(userdata['userid']) ** 3 % 15) + userdata['check_password'] + 'FORID' + str(
+            userdata['userid']), encoding='utf8')
+
+        return bcrypt.hashpw(userinfo, tp) == tp
+
+    def user_process_password(self, **userdata):
+        """
+        We need:
+            * password
+            * userid
+        RETURN str
+        """
+        return (bcrypt.hashpw(bytes(str(int(userdata['userid']) ** 3 % 15) + userdata['password'] + 'FORID' + str(
+            userdata['userid']), encoding='utf8'), bcrypt.gensalt()).decode('utf8'))
+
+    def user_setup_password(self, **userdata):
+        """
+        We need:
+            * OLD password (if it was)
+            * userid
+            * new passwjrd
+        RETURN bool
+        """
