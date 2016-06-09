@@ -43,3 +43,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def set_data(self, identificator, path, task):
         self.database[path].update(identificator, {'$set': task}, False, True)
+
+    def insert_data(self, path, task):
+        task['id'] = self.database[path].count() + 1
+        task['valid'] = 1
+        self.database[path].insert_one(task)

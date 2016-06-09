@@ -4,7 +4,7 @@ import tornado.httpserver
 import tornado.web
 
 import ui
-from handler import MainHandler, SMHandler, DebugHandler, DevHandler, LoginHandler
+from handler import MainHandler, SMHandler, DebugHandler, DevHandler, LoginHandler, RegistrationHandler
 import api.baseapi
 
 
@@ -25,6 +25,7 @@ def start(port):
         (r"/dev(/.*|)$", DevHandler),
         (r"/api(/.*|)$", api.baseapi.Api),
         (r"/login(/.*|)$", LoginHandler),
+        (r"/register(/.*|)$", RegistrationHandler),
         (r"/files/(.*)", tornado.web.StaticFileHandler, {"path": "static/files/"}),
     ], **settings)
 

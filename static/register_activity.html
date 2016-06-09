@@ -1,7 +1,6 @@
 <head>
       {% raw modules.Artem('include.html') %}
       <script type="text/javascript">
-          exer_code  = {{ data['exer_code'] }}
           function send(){
               data = [];
               aim = {};
@@ -21,7 +20,7 @@
 
               data = data.join(';');
               $('#sender').text('Сохраняем информацию');
-              $.ajax({'url': '/api/set/',
+              $.ajax({'url': '/register/',
                       'type':'POST',
                       'data': {'lake':'global', 'aim':JSON.stringify(aim)},
                       'success' : function(e) {
@@ -56,8 +55,6 @@
 <div class='tiny'>
 
 <div class='blueblock specialblue' style='border-radius: 0 0 5px 5px'>
-
-    {% raw modules.Artem('ui_exer_select.html', description=data['description'], descriptions=data['descriptions'], opened_ex=data['opened_ex']) %}
     <a style='font-size:2em; font-weight: normal;'>Первый запуск системы </a> <br>
 <p style="font-size: 1em; margin: 20px 0 0 0;">
 Укажите параметры, для запуска системы
