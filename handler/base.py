@@ -1,5 +1,6 @@
 import tornado.web
 from pymongo import MongoClient
+import bcrypt
 
 client = MongoClient()  # базы данных
 
