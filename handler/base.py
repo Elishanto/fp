@@ -74,7 +74,7 @@ class BaseHandler(tornado.web.RequestHandler):
         RETURN str
         """
         return (bcrypt.hashpw(bytes(str(int(userdata['userid']) ** 3 % 15) + userdata['password'] + 'FORID' + str(
-            userdata['userid']), encoding='utf8'), bcrypt.gensalt()).decode('utf8'))
+            userdata['userid']), encoding='utf8'), bcrypt.gensalt()))
 
     def user_setup_password(self, **userdata):
         """
