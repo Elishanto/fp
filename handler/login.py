@@ -1,8 +1,5 @@
 from handler import BaseHandler
-from api import sysfunc
 
-
-fn = sysfunc.SysFunc()
 
 class LoginHandler(BaseHandler):
     def get(self, url):
