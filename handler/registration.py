@@ -22,7 +22,7 @@ class RegistrationHandler(BaseHandler):
 
             #посадочная полоса для Лёши!
             USER_ID = 54 # <<<<<<<<
-            task['password'] = self.user_process_password({'userid':USER_ID, 'password': task['password']})
+            task['password'] = self.user_process_password(userid=USER_ID, password=task['password'])
             task['valid'] = 1
             self.insert_data('users', task)
             self.write(Api.generate_request_return(1))
