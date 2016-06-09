@@ -21,10 +21,10 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             pass
 
-    def check_via_login(self, login, pass):
+    def check_via_login(self, login, password):
         try:
             if self.database['users'].find_one({'id': int(login)})['valid'] == 1:
-                if self.user_check_password({ 'userid':login, "check_password":pass}):
+                if self.user_check_password({ 'userid':login, "check_password":password}):
                     return True
                 return False #Bad password!
         except (TypeError, ValueError):
