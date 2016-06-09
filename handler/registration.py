@@ -2,7 +2,7 @@ import json
 import os
 from handler import BaseHandler
 from api.baseapi import Api
-
+import bcrypt
 description = os.environ['description']
 
 
