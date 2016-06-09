@@ -1,5 +1,8 @@
 from handler import BaseHandler
+from api import sysfunc
 
+
+fn = sysfunc()
 
 class LoginHandler(BaseHandler):
     def get(self, url):
@@ -16,7 +19,7 @@ class LoginHandler(BaseHandler):
         except BaseException:
             redirect = 1
 
-        if self.check_via_login(user):
+        if self.check_via_login(user, self.get_argument("pass")):
             self.set_secure_cookie("user", user)
             if redirect:
                 self.redirect("/")
