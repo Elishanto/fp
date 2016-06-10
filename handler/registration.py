@@ -30,7 +30,7 @@ class RegistrationHandler(BaseHandler):
              or len(task['password']) == 0: 
                 self.write(Api.generate_request_return(-91))
                 self.finish()
-                return
+                return 
 
             task['opened_ex'] = (10,)
             task['valid'] = 1
