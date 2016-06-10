@@ -26,6 +26,6 @@ class DevHandler(BaseHandler):
                     print('OK, GITHUB CHECKED\nBRANCH "{}"'.format(os.environ['GIT_BRANCH']))
                     subprocess.Popen(['bash ./localdata/updater.sh', os.environ['GIT_BRANCH']])
                 else:
-                    print('THIS IS NOT GITHUB!')
+                    print('THIS IS NOT GITHUB!') 
             else:
                 print('Bad args,', self.request.headers.get('X-Github-Event', '-1'), postdata.get("ref", ''))
