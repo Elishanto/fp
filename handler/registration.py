@@ -21,7 +21,7 @@ class RegistrationHandler(BaseHandler):
                 task = {i:task[i] for i in allowed}
             except KeyError:
                 self.write(Api.generate_request_return(-90))
-                self.finish()
+                self.finish()  
                 return
 
             if re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', task['email']) is None\
