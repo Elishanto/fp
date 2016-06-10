@@ -6,7 +6,7 @@ import os
 import subprocess
 
 
-class DevHandler(BaseHandler):
+class DevHandler(BaseHandler): 
     def post(self, url):
         url = url[1:]
         if url.startswith('git'):
