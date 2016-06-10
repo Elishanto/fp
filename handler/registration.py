@@ -3,7 +3,9 @@ import os
 from handler import BaseHandler
 from api.baseapi import Api
 description = os.environ['description']
+import re
 
+EMAIL_CHECK = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
 
 class RegistrationHandler(BaseHandler):
     def get(self, url):
@@ -12,11 +14,21 @@ class RegistrationHandler(BaseHandler):
     def post(self, url=None):
         lake = self.get_argument("lake").lower().strip()  # global/exID
         if lake == 'global':
-            allowed = set(['name', 'email', 'wt', 'ht', 'password'])
+            allowed = ('name', 'email', 'wt', 'ht', 'password')
             task = json.loads(self.get_argument("aim").strip())
-            if len(set(task.keys()) - allowed) > 0: 
-                print('DEB', set(task.keys()) - allowed)
+
+            try:
+                task = {i:task[i] for i in allowed}
+            except KeyError:
                 self.write(Api.generate_request_return(-90))
+                self.finish()
+                return
+
+            if re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', task['email']) is None\
+             or (not task['wt'].is_integer())\
+             or (not task['ht'].is_integer())\
+             or len(task['password']) == 0: 
+                self.write(Api.generate_request_return(-91))
                 self.finish()
                 return
 

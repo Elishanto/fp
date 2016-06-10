@@ -32,6 +32,7 @@ class Api(BaseHandler):
             -15: 'Bad extype',
             -20: 'Bad size',
             -21: 'Bad format',
+            -91: 'Form inadequate',
         }
         try:
             return {'code': error, 'description': error_description[error]}  # JSON!
