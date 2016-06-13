@@ -141,9 +141,10 @@
         color: white;
         display: none;
         right: 30px;
-        position: absolute;
         opacity: 0;
         top: 10px;
+        position: fixed;
+        z-index: 100;
     }
     input:disabled {
         background: url('/files/load.GIF') no-repeat 5px 5px !important;

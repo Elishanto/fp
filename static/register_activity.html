@@ -1,4 +1,5 @@
 <head>
+
    {% raw modules.Artem('include.html') %}
    <script type="text/javascript">
       function send(){
@@ -10,7 +11,7 @@
           aim['password'] = $('#password').val();
           aim['ht'] = $('#ht').val();
           aim['wt'] = $('#wt').val();
-      
+          aim['captcha'] = grecaptcha.getResponse();
            
       
           data = data.join(';');
@@ -18,6 +19,7 @@
                   'type':'POST',
                   'data': {'lake':'global', 'aim':JSON.stringify(aim)},
                   'success' : function(e) {
+                      console.log(e);
                       if(e['code'] >= 0){
                         location.reload();
                         alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
@@ -41,6 +43,8 @@
    <style>
       body {color:white; background-color: #E2E6E8; }
    </style>
+
+   <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
    {% raw modules.Artem('ui_alert.html') %}
@@ -67,6 +71,8 @@
          <input required type='email' style='width:100%' class="textinput defround" id='email' placeholder='Почта'>
          <input required style='width:30%' class="textinput defround" type='number' id='ht' placeholder='Рост'>
          <input required style='width:30%' class="textinput defround" type='number' id='wt' placeholder='Вес'>
+
+         <div class="g-recaptcha" data-sitekey="6LdadiITAAAAAIftLzXc4fUgNWiMaQ-KAxnCJ-Qm"></div>
 
           <br>
           <button id='sender' onclick='send()'  class="pac defround" >Дальше</button>

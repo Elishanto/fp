@@ -4,8 +4,10 @@ from handler import BaseHandler
 from api.baseapi import Api
 description = os.environ['description']
 import re
+import recaptcha2
 
 EMAIL_CHECK = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
+CAPTCHA_SECRET_KEY = '6LdadiITAAAAAI0o59pEnTCHGCn5Zh4bB17PJ-bt'
 
 class RegistrationHandler(BaseHandler):
     def get(self, url):
@@ -16,6 +18,13 @@ class RegistrationHandler(BaseHandler):
         if lake == 'global':
             allowed = ('name', 'email', 'wt', 'ht', 'password')
             task = json.loads(self.get_argument("aim").strip())
+            
+            if not ('captcha' not in task.keys() or\
+            recaptcha2.verify(CAPTCHA_SECRET_KEY, task['captcha'], self.request.remote_ip)['success']):
+                self.write(Api.generate_request_return(-100))
+                self.finish()
+                return 
+
 
             try:
                 task = {i:task[i] for i in allowed}
@@ -23,6 +32,8 @@ class RegistrationHandler(BaseHandler):
                 self.write(Api.generate_request_return(-90))
                 self.finish()  
                 return
+
+
 
             if re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', task['email']) is None\
              or (not task['wt'].isdigit())\
