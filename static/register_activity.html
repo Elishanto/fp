@@ -1,86 +1,76 @@
 <head>
-      {% raw modules.Artem('include.html') %}
-      <script type="text/javascript">
-          function send(){
-              data = [];
-              aim = {};
-
-              aim['name']  = $('#name').val();
-              aim['email'] = $('#email').val();
-              aim['password'] = $('#password').val();
-              aim['ht'] = $('#ht').val();
-              aim['wt'] = $('#wt').val();
-
-              list = ['#name', '#email', '#ht', '#wt'];
-              for(i = 0; i<5; i++){
-                  $(list[i]).val('')
-              }
-
-
-
-
-              data = data.join(';');
-              $('#sender').text('Сохраняем информацию');
-              $.ajax({'url': '/register/',
-                      'type':'POST',
-                      'data': {'lake':'global', 'aim':JSON.stringify(aim)},
-                      'success' : function(e) {
-                          if(e['code'] >= 0){
-                            location.reload();
-                            alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
-                          }
-                          else{
-                              alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)');
-                              $('#sender').text('Сохранить и отправить')
-                          }
-
-                      },
-                      'error' : function(request, status, err){
-                          alertos('Ошибка отправки', 'rgba(239, 135, 135, 0.78)');
-                          $('#sender').text('Сохранить и отправить')
-                      },
-
-                      timeout: 15000
-              }
-              );
-
+   {% raw modules.Artem('include.html') %}
+   <script type="text/javascript">
+      function send(){
+          data = [];
+          aim = {};
+      
+          aim['name']  = $('#name').val();
+          aim['email'] = $('#email').val();
+          aim['password'] = $('#password').val();
+          aim['ht'] = $('#ht').val();
+          aim['wt'] = $('#wt').val();
+      
+           
+      
+          data = data.join(';');
+          $.ajax({'url': '/register/',
+                  'type':'POST',
+                  'data': {'lake':'global', 'aim':JSON.stringify(aim)},
+                  'success' : function(e) {
+                      if(e['code'] >= 0){
+                        location.reload();
+                        alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
+                      }
+                      else{
+                          alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)');
+                      }
+      
+                  },
+                  'error' : function(request, status, err){
+                      alertos('Ошибка отправки', 'rgba(239, 135, 135, 0.78)');
+                  },
+      
+                  timeout: 15000
           }
-
-      </script>
-      <style>
-       body {color:white; background-color: #E2E6E8; }
-      </style>
+          );
+      
+      }
+      
+   </script>
+   <style>
+      body {color:white; background-color: #E2E6E8; }
+   </style>
 </head>
 <body>
-    {% raw modules.Artem('ui_alert.html') %}
-<div class='tiny'>
+   {% raw modules.Artem('ui_alert.html') %}
+   {% raw modules.Artem('ui_exer_select.html') %}
+   <div class='grey_imp'>
+      <div class='leftcorn'>
+         <a style='font-size:2em; font-weight: normal;'>Регистрация! </a> <br>
+         <p>
+            [Внутренний плейсмент с кратким
+            описанием возможностей сервиса для
+            юзера]
+         </p>
+      </div>
+   </div>
+   <div style='padding:10px 20px'>
+      <br>
+      <div class='leftcorn'>
+          <div style="background-color: rgb(241, 219, 62); margin: 20px -30px; padding: 15px 30px;">
+            <input style='width:100%' class="textinput defround" id='invite' placeholder='Инвайт'>
+          </div>
 
-<div class='blueblock specialblue' style='border-radius: 0 0 5px 5px'>
-    <a style='font-size:2em; font-weight: normal;'>Регистрация! </a> <br>
-<p style="font-size: 1em; margin: 20px 0 0 0;">
-Это займет совсем мало времени!
-</p>
+         <input style='width:100%' class="textinput defround" id='name' placeholder='Имя'>
+         <input required type="password" style='width:100%' class="textinput defround"  id='password' placeholder='Пароль'>
+         <input required type='email' style='width:100%' class="textinput defround" id='email' placeholder='Почта'>
+         <input required style='width:30%' class="textinput defround" type='number' id='ht' placeholder='Рост'>
+         <input required style='width:30%' class="textinput defround" type='number' id='wt' placeholder='Вес'>
 
-</div>
+          <br>
+          <button id='sender' onclick='send()'  class="pac defround" >Дальше</button>
 
-<div style='padding:10px 20px'>
-
-<br>
-
-<input style='width:100%' class="textinput defround" id='name' placeholder='Имя'>
-<br><br>
-<input required type="password" style='width:100%' class="textinput defround"  id='password' placeholder='Пароль'>
-<br><br>
-<input required type='email' style='width:100%' class="textinput defround" id='email' placeholder='Почта'>
-<br><br>
-<input required style='width:100%' class="textinput defround" type='number' id='ht' placeholder='Рост'>
-<br><br>
-<input required style='width:100%' class="textinput defround" type='number' id='wt' placeholder='Вес'>
-<br><br>
-
-</div>
-<div class='blueblock specialblue' style='border-radius: 5px 5px 0 0'>
-    <button id='sender' onclick='send()'  class="pac defround" style='width:100%' >сохранить и обновить</button>
-</div>
-</div>
+      </div>
+   </div>
 </body>

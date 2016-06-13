@@ -1,11 +1,15 @@
-<div id='UI_EXER_SELECT' style='width:100%; text-align:center;     text-align: center;  position: relative; '>
-    <img src="/files/plogo.png" style="
-    position: absolute;
-    left: 10px;
-    top: -10px;
-    width: 54px;
-" href="/">
+<div id='UI_EXER_SELECT'>
 
+    <div class='leftcorn'>
+        <img src="/files/plogo.png" style="
+        position: relative;
+        left: 10px;
+        width: 54px;
+        float: left;
+        top: 20px;" href="/">
+    </div>
+
+    {%if 'opened_ex' in data.keys() %}
     <button style="
         border: 1px solid rgb(103, 143, 239);
         /* border: none; */background-color: #486CEE;
@@ -25,5 +29,6 @@
         <button onclick="location.replace('/e/{{i}}')">{{ data['descriptions'][i] }}</button>
         {% end %}
     </div>
+    {%end%}
 
 </div>
