@@ -25,8 +25,8 @@ class RegistrationHandler(BaseHandler):
                 return
 
             if re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', task['email']) is None\
-             or (not task['wt'].is_integer())\
-             or (not task['ht'].is_integer())\
+             or (not task['wt'].isdigit())\
+             or (not task['ht'].isdigit())\
              or len(task['password']) == 0: 
                 self.write(Api.generate_request_return(-91))
                 self.finish()
