@@ -8,6 +8,10 @@ from math import sqrt
 from api.baseapi import Api
 
 
+#
+
+#
+
 class SysFunc:
     def __init__(self, database):
         self.weather_cache = None
@@ -156,6 +160,7 @@ class SysFunc:
 
         return '/files/users/' + str(n)
 
+
     def calculate_default_program(self, user, now, exer_code, plus):
         """
         Расчёт базового плана
@@ -190,4 +195,28 @@ class SysFunc:
 
         return int(eval(str(now) + zoom[(x + 1) % 7]))  # умножение
 
+    def get_user_grop(self, uid):
+        """
 
+        """
+        data = self.get_user_info(uid, task=['wt', 'ht'])
+        coef = data['wt']/data['ht']
+        GROUPS = [2.5, 3, 1, 10] #!
+
+        nn = [abs(coef-i) for i in GROUPS]
+        nn = [ i/sum(nn) for i in nn ]
+
+        return nn
+
+
+    def upd_data(self, uid, exer_code, count, day_before):
+        beforeprogramm = self.database['sys.beforeprogram'].find_one({'exer_code':exer_code})['uppers']
+        """
+        1) поднять в архивах историю пользователя за все дни до этого.
+        2) понять, насколько она отличается от значения стастистики, которое есть у нас
+        3) посчитать среднее арифметическое квадрата разницы оф. данных и истории юзера
+        4) обновить программу как
+           a*b + c*d, где a+b=1 и a является коэф. по обратной пропорции, b - результату пользователя (count), с - 1-a, d - официальным данным за этот период
+
+        архивы поднимать по группе, к которой принадлежит пользователь
+        """
