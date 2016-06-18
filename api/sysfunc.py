@@ -8,9 +8,6 @@ from math import sqrt
 from api.baseapi import Api
 
 
-#
-
-#
 
 class SysFunc:
     def __init__(self, database):
@@ -138,10 +135,9 @@ class SysFunc:
             plan.append(self.calculate_default_program(uid, idol, extype, dlt))
             program.append(int(sqrt((plan[-1] * future[dlt]))))
 
-            daytofind = datetime.datetime.now() - datetime.timedelta(days=dlt)
+            daytofind = (datetime.datetime.now() - self.get_user_info(uid, task=['reg_stamp'])['reg_stamp']).days()
             try:
-                n = self.database['data.{0}'.format(uid)].find_one({'ex': extype}, {str(daytofind.date()): 1})[str(
-                    daytofind.date())]
+                n = self.database['data.{0}'.format(uid)].find_one({'ex': extype}, {daytofind: 1})[daytofind]
             except KeyError:
                 n = 0
             rk.append(n)
@@ -209,6 +205,7 @@ class SysFunc:
         return nn
 
 
+
     def upd_data(self, uid, exer_code, count, day_before):
         """
         1) поднять в архивах историю пользователя за все дни до этого.
@@ -222,3 +219,4 @@ class SysFunc:
 
         
         beforeprogramm = self.database['data.system.beforeprogram'].find_one({'exer_code':exer_code, 'group':self.get_user_grop(uid)})['uppers']
+

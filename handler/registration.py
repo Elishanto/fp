@@ -4,7 +4,7 @@ from handler import BaseHandler
 from api.baseapi import Api
 import re
 import recaptcha2
-
+import datetime
 description = os.environ['description']
 
 EMAIL_CHECK = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
@@ -42,6 +42,7 @@ class RegistrationHandler(BaseHandler):
                 self.finish()
                 return
 
+            task['reg_stamp'] = datetime.datetime.now()
             task['opened_ex'] = (10,)
             task['valid'] = 1
             self.insert_data('users', task)

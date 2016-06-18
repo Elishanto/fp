@@ -1,6 +1,6 @@
 lat: 55.27
 lng: 65.20
-port: 80
+port: 8000
 formats:
   - png
   - jpg
