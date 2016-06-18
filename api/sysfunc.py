@@ -210,7 +210,6 @@ class SysFunc:
 
 
     def upd_data(self, uid, exer_code, count, day_before):
-        beforeprogramm = self.database['sys.beforeprogram'].find_one({'exer_code':exer_code})['uppers']
         """
         1) поднять в архивах историю пользователя за все дни до этого.
         2) понять, насколько она отличается от значения стастистики, которое есть у нас
@@ -220,3 +219,6 @@ class SysFunc:
 
         архивы поднимать по группе, к которой принадлежит пользователь
         """
+
+        
+        beforeprogramm = self.database['sys.beforeprogram'].find_one({'exer_code':exer_code})['uppers']

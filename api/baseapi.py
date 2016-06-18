@@ -52,7 +52,6 @@ class Api(BaseHandler):
                 # МЕТОД API: обновление
                 jtype = self.get_argument("type").lower()
                 if jtype == 'push_excer':
-                    # отправка данных по выполненному упражнению
                     exer_code = int(self.get_argument("exer_code"))
                     if int(exer_code) in self.data['exer']:
                         try:
