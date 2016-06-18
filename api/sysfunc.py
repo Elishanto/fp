@@ -221,4 +221,4 @@ class SysFunc:
         """
 
         
-        beforeprogramm = self.database['sys.beforeprogram'].find_one({'exer_code':exer_code})['uppers']
+        beforeprogramm = self.database['data.system.beforeprogram'].find_one({'exer_code':exer_code, 'group':self.get_user_grop(uid)})['uppers']
