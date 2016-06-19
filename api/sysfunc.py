@@ -5,13 +5,13 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.externals import joblib
 from math import sqrt
-from api.baseapi import Api
 
 
 
 class SysFunc:
-    def __init__(self, database):
+    def __init__(self, database, api):
         self.weather_cache = None
+        self.api = api
         self.database = database
         self.weather_cache_time = None
         self.lat, self.lng = os.environ['lat'], os.environ['lng']

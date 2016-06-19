@@ -3,7 +3,7 @@ from pymongo import MongoClient
 import bcrypt
 
 client = MongoClient()  # базы данных
-
+import api.sysfunc
 import os
 import datetime
 import imghdr
@@ -21,7 +21,8 @@ class BaseHandler(tornado.web.RequestHandler):
         self.formats = eval(os.environ['formats'])
         self.weather_key = os.environ['weather_key']
         self.description = os.environ['description']
-        self.database = client['health']
+    
+    database = client['health']
 
     def data_received(self, chunk):
         pass
@@ -188,7 +189,7 @@ class BaseHandler(tornado.web.RequestHandler):
             # получнеие данных
             exer_code = int(args.get("exer_code"))
             if int(exer_code) in self.data['exer']:
-                predval = api.sysfunc.SysFunc(self.database).predict_data(exer_code, datetime.datetime.now(),
+                predval = api.sysfunc.SysFunc(self.database, self).predict_data(exer_code, datetime.datetime.now(),
                                                        self.get_current_user())
                 plnday = self.database['data.{0}'.format(self.get_current_user())]['stat'].find_one(
                     {'ex': exer_code}, {'_count': 1})['_count']
@@ -206,7 +207,7 @@ class BaseHandler(tornado.web.RequestHandler):
             # МЕТОД API: работа с планом
             exer_code = int(args.get("exer_code"))
             if int(exer_code) in self.data['exer']:
-                return(api.sysfunc.SysFunc(self.database).plan(self.get_current_user(), exer_code))
+                return(api.sysfunc.SysFunc(self.database, self).plan(self.get_current_user(), exer_code))
 
 
         else:
@@ -258,7 +259,7 @@ class BaseHandler(tornado.web.RequestHandler):
             for i in range(1, 6):
                 day = datetime.datetime.now() - datetime.timedelta(days=i)
                 ndone = pushdata[i - 1]
-                api.sysfunc.SysFunc(self.database).fit_data(exer_code, ndone, day, self.get_current_user())
+                api.sysfunc.SysFunc(self.database, self).fit_data(exer_code, ndone, day, self.get_current_user())
 
             self.database['data.{0}.stat'.format(self.get_current_user())].update({'ex': exer_code},
                                                                                   {'$set': {'before': sa // 5}})

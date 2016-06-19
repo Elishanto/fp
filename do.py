@@ -31,5 +31,5 @@ def start(port):
 
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(port)
-    print('started')
+    print('started on port', port)
     tornado.ioloop.IOLoop.current().start()

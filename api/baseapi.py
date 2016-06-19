@@ -44,4 +44,4 @@ class Api(BaseHandler):
         task = self.request.uri.split('/')[2].lower()
         print('TATATASK', task, self.request.body.decode(encoding='utf8'))
         if task in self.ALLOWED_METHODS:
-            self.write(eval('self.api.'+task)( { i.split('=')[0]: i.split('=')[1] for i in self.request.body.decode(encoding='utf8').split('&') } ))
+            self.write(eval('self.'+task)( { i.split('=')[0]: i.split('=')[1] for i in self.request.body.decode(encoding='utf8').split('&') } ))
