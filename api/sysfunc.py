@@ -208,6 +208,7 @@ class SysFunc:
 
 
 
+
     def upd_data(self, uid, exer_code, count, day_before):
         """
         1) поднять в архивах историю пользователя за все дни до этого.
@@ -226,7 +227,15 @@ class SysFunc:
             beforeprogram = []
 
         beforeprogram = beforeprogram + [0 for i in range(max(0, day_before - len(beforeprogram) ))]
-
+        usr_data = self.database['data.'+str(uid)].find_one()
         error  = 0
 
-        #user_hist = 
+        for i in range(day_before):
+            try:
+                usr_ans = usr_data[str(i)]
+            except BaseException:
+                usr_ans = 0
+
+            error += (beforeprogram[i] - usr_ans) ** 2
+
+        print(error)
