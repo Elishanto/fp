@@ -161,7 +161,9 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
     def upd(self, args):
+        hday = str((datetime.datetime.now() - self.get_user_info(self.get_current_user(), task=['reg_stamp'])['reg_stamp']).days)
         jtype = args.get('type').lower().strip()
+        print("HDAY", self.get_user_info(self.get_current_user(), task=['reg_stamp'])['reg_stamp'], hday, args)
         if jtype == 'push_excer':
             exer_code = int(args.get("exer_code"))
             if int(exer_code) in self.data['exer']:
@@ -175,7 +177,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
                 self.database['data.{0}'.format(self.get_current_user())].update(
                     {'ex': exer_code},
-                    {'$inc': {str(datetime.datetime.now().date()): dpush}}, upsert=True)
+                    {'$inc': {hday: dpush}}, upsert=True)
                 self.database['data.{0}'.format(self.get_current_user())]['stat'].update(
                     {'ex': exer_code},
                     {'$inc': {'_all': dpush, '_count': 1}})
@@ -189,15 +191,14 @@ class BaseHandler(tornado.web.RequestHandler):
             # получнеие данных
             exer_code = int(args.get("exer_code"))
             if int(exer_code) in self.data['exer']:
-                predval = api.sysfunc.SysFunc(self.database, self).predict_data(exer_code, datetime.datetime.now(),
+                predval = api.sysfunc.SysFunc(self.database, self).predict_data(exer_code, hday,
                                                        self.get_current_user())
                 plnday = self.database['data.{0}'.format(self.get_current_user())]['stat'].find_one(
                     {'ex': exer_code}, {'_count': 1})['_count']
                 program = round((plnday % 30 + 5 + predval) / 2)
                 try:
                     srv = self.database['data.{0}'.format(self.get_current_user())].find_one(
-                        {'ex': exer_code}, {str(datetime.datetime.now().date()): 1})[
-                        str(datetime.datetime.now().date())]
+                        {'ex': exer_code}, {hday: 1})[hday]
                 except KeyError:
                     srv = 0
 
@@ -243,23 +244,21 @@ class BaseHandler(tornado.web.RequestHandler):
 
         elif task == 'repair_firstrun':
             exer_code = int(args.get("exer_code").lower().strip())
-            pushdata = [int(i) for i in args.get("data").lower().strip().split(';')]
+            pushdata = [int(i) for i in args.get("data").lower().strip().split('%3b')]
             if len(pushdata) != 5:
                 return(self.generate_request_return(-11))
             sa = 0
             for i in range(1, 6):
-                day = datetime.datetime.now() - datetime.timedelta(days=i)
                 ndone = pushdata[i - 1]
                 sa += ndone
                 self.database['data.{0}.stat'.format(self.get_current_user())].update({'ex': exer_code}, {
                     '$inc': {'_all': ndone, '_count': 1}}, upsert=True)
                 self.database['data.{0}'.format(self.get_current_user())].update({'ex': exer_code}, {
-                    '$inc': {str(day.date()): ndone}}, upsert=True)
+                    '$inc': {str(i-5): ndone}}, upsert=True)
 
             for i in range(1, 6):
-                day = datetime.datetime.now() - datetime.timedelta(days=i)
                 ndone = pushdata[i - 1]
-                api.sysfunc.SysFunc(self.database, self).fit_data(exer_code, ndone, day, self.get_current_user())
+                api.sysfunc.SysFunc(self.database, self).fit_data(exer_code, ndone, i, self.get_current_user())
 
             self.database['data.{0}.stat'.format(self.get_current_user())].update({'ex': exer_code},
                                                                                   {'$set': {'before': sa // 5}})

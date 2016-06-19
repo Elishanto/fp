@@ -23,7 +23,8 @@ class SysFunc:
         """
         Генерация метеоданных
         """
-        if abs(time - datetime.datetime.now()).total_seconds() // (60 * 60) <= 24:
+        #КЕШИРОВАНИЕ
+        if True:#abs(self.api.get_user_info(self.api.get_current_user(), task = ['reg_stamp'])['reg_stamp'] - time) <= 1:
             if self.weather_cache is None:
                 self.weather_cache = forecastio.load_forecast(self.weather_key, lat_, lng_,
                                                               time=datetime.datetime.now(),
@@ -73,8 +74,9 @@ class SysFunc:
 
         counted = []
         for key, wdate in enumerate(zx):
-            delta = abs(datetime.datetime.strptime(wdate, "%Y-%m-%d").date() -
-                        datetime.datetime.now().date()).total_seconds() / (60 * 60 * 24)  # учёт временного интервала
+            delta = 1
+            # delta = abs(datetime.datetime.strptime(wdate, "%Y-%m-%d").date() -
+            #             datetime.datetime.now().date()).total_seconds() / (60 * 60 * 24)  # учёт временного интервала
             counted.append(sqrt(rk[key]) / 2 ** delta)
 
         return wdata, counted
@@ -218,5 +220,13 @@ class SysFunc:
         """
 
         
-        beforeprogramm = self.database['data.system.beforeprogram'].find_one({'exer_code':exer_code, 'group':self.get_user_grop(uid)})['uppers']
+        try:
+            beforeprogramm = self.database['data.system.beforeprogram'].find_one({'exer_code':exer_code, 'group':self.get_user_grop(uid)})['uppers']
+        except KeyError:
+            beforeprogram = []
 
+        beforeprogram = beforeprogram + [0 for i in range(max(0, day_before - len(beforeprogram) ))]
+
+        error  = 0
+
+        #user_hist = 

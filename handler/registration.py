@@ -21,11 +21,11 @@ class RegistrationHandler(BaseHandler):
             allowed = ('name', 'email', 'wt', 'ht', 'password')
             task = json.loads(self.get_argument("aim").strip())
 
-            if not ('captcha' not in task.keys() or
-                        recaptcha2.verify(CAPTCHA_SECRET_KEY, task['captcha'], self.request.remote_ip)['success']):
-                self.write(Api.generate_request_return(-100))
-                self.finish()
-                return
+            # if not ('captcha' not in task.keys() or
+            #             recaptcha2.verify(CAPTCHA_SECRET_KEY, task['captcha'], self.request.remote_ip)['success']):
+            #     self.write(Api.generate_request_return(-100))
+            #     self.finish()
+            #     return
 
             try:
                 task = {i: task[i] for i in allowed}
