@@ -143,43 +143,49 @@
       </script>
    </head>
    <body>
-      <div class="safe blueblock">
 
         {% raw modules.Artem('ui_exer_select.html', description=data['description'], descriptions=data['descriptions'], opened_ex=data['opened_ex']) %}
         {% raw modules.Artem('ui_alert.html') %}
 
+      <div class="safe blueblock">
 
          <br>
-         <br>
-         <br>
-         <br>
+
+            <div class="marks">
+
+              <span class="pgn_z" id="srv">7</span>
+
+          <span style="
+              margin: 0 20px;
+              opacity: 0.7;
+              font-size: 150px;
+          ">/</span>
+
+          <span class="pgn_z" id="srv">7</span>
+
+              <!--
+               <div id='predicted' style="background-color: white; color:265EEA">0</div>
+               <div style="background-color: #DBC567; color:white" id='program'>0</div>
+               <div style="background-color: #565656; color:white" id='srv'>0</div>-->
+            </div>
+
          <div class="url" style="
             width: 25%;
             margin: 0 auto;
             min-width: 300px;max-width: 400px;box-sizing: border-box;">
-            <div class="marks">
-               <div id='predicted' style="background-color: white; color:265EEA">0</div>
-               <div style="background-color: #DBC567; color:white" id='program'>0</div>
-               <div style="background-color: #565656; color:white" id='srv'>0.0</div>
-            </div>
+
             <br><br>
             <div class="zavorotnik">
                <input type="number"  class="textinput defround" placeholder="..." id="pushval" style="
                   width: calc(100% - 100px);
                   box-sizing: border-box;
                   ">
-               <button class="pac defround" id="push" style="
-                  box-sizing: border-box;
-                  ">ОК</button>
+               <button class="pac defround" id="push" style="box-sizing: border-box;color: #476bed;background-color: white;">ОК</button>
             </div>
-            <p style="
-               text-align: left;
-               padding: 10px 20px;
-               box-sizing: border-box;
-               ">Для достижения точного результата анализов, необходимо вносить данные об упражнениях не позднее, чем после <b>30 минут</b>, с момента их выполнения.</p>
+            <p style="text-align: left;padding: 10px 20px;box-sizing: border-box;font-size: 1em;margin-top: 25px;">Для достижения точного результата анализов, необходимо вносить данные об упражнениях не позднее, чем после <b>30 минут</b>, с момента их выполнения.</p>
          </div>
       </div>
-      <div class="promise">
+      <div class="promise gray_block" >
          {% raw modules.Artem('ui_user.html', data=data['data']) %}
          <div id="linechart_material"></div>
       </div>
