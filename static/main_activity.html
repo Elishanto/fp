@@ -56,6 +56,31 @@
 
           })
 
+          $('#plus_one').on('click', function() {
+              $("#pushval").prop('disabled', true);
+              $.ajax({'url': '/api/upd/',
+                      'type':'POST',
+                      'data': {'type': 'push_excer', 'exer_code': window.exer_code, 'data': 1},
+                      'success' : function(e) {
+                          if(e['code'] >= 0){
+                              alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
+                              update_muchacho();
+                              //update_chart();
+                          }
+                          else{
+                              alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
+                          }
+                      },
+                      'error' : function(request, status, err){
+                          alertos('сбой отправки: '+status, 'rgba(239, 135, 135, 0.78)')
+                      },
+
+                      timeout: 15000,
+              }
+              );
+
+
+          })
 
 
 
@@ -176,8 +201,10 @@
 
             <br><br>
             <div class="zavorotnik">
+            <button class="pac defround" id="plus_one" style="box-sizing: border-box;color: white;background-color: #7f98f2;">+1</button>
+
                <input type="number"  class="textinput defround" placeholder="..." id="pushval" style="
-                  width: calc(100% - 100px);
+                  width: calc(100% - 160px);
                   box-sizing: border-box;
                   ">
                <button class="pac defround" id="push" style="box-sizing: border-box;color: #476bed;background-color: white;">ОК</button>
