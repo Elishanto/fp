@@ -10,17 +10,8 @@
     </div>
 
     {%if 'opened_ex' in data.keys() %}
-    <button style="
-        border: 1px solid rgb(103, 143, 239);
-        /* border: none; */background-color: #486CEE;
-        font-family: 'ProximaNova-Regular',serif;
-        color: white;
-        padding: 5px 15px;
-        outline: none;
-        text-shadow: 0px 2px 0.58px rgba(0,0,0,0.15);
-        
-        font-size: 1em;"
-            onclick="if($('.alertmenu').css('display') == 'block'){$('.alertmenu').animate({'margin-top':'-45px', 'opacity':'0'}, 100, function(){$('.alertmenu').css({'display':'none'}) })} else{$('.alertmenu').css({'display':'block'}).animate({'margin-top':'-40px', 'opacity':'1'}, 100)}">
+    <button style="border: none;background-color: #6381f1;color: white;border-radius: 23px;padding: 8px 27px;outline: none;text-shadow: 0px 2px 0.58px rgba(0,0,0,0.15);font-size: 1em;position: absolute;top: 30px;left: 50%;transform: translateX(-50%);"
+            onclick="if($('.alertmenu').css('display') == 'block'){$('.alertmenu').animate({'margin-top':'70px', 'opacity':'0'}, 100, function(){$('.alertmenu').css({'display':'none'}) })} else{$('.alertmenu').css({'display':'block'}).animate({'margin-top':'75px', 'opacity':'1'}, 100)}">
         {{data['description']}}
     </button>
 

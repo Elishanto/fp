@@ -48,7 +48,7 @@
 <body>
 
 {% raw modules.Artem('ui_alert.html') %}
-{% raw modules.Artem('ui_exer_select.html') %}
+{% raw modules.Artem('ui_exer_select.html', description=data['description'], descriptions=data['descriptions'], opened_ex=data['opened_ex']) %}
 
 <div class='grey_imp'>
     <div class='leftcorn'>
