@@ -119,7 +119,7 @@ class SysFunc:
         try:
             future = self.predict_data(extype, datetime.datetime.now(), uid, period=pediod)
         except IndexError:
-            return Api.generate_request_return(-12)
+            return self.api.generate_request_return(-12)
         plan = []
 
         try:
@@ -136,13 +136,14 @@ class SysFunc:
             plan.append(self.calculate_default_program(uid, idol, extype, dlt))
             program.append(int(sqrt((plan[-1] * future[dlt]))))
 
-            daytofind = (datetime.datetime.now() - self.get_user_info(uid, task=['reg_stamp'])['reg_stamp']).days()
+            datetofind = self.api.get_user_info(uid, task=['reg_stamp'])['reg_stamp']
+            daytofind = str((datetime.datetime.now() - datetofind).days)
             try:
                 n = self.database['data_{0}'.format(uid)].find_one({'ex': extype}, {daytofind: 1})[daytofind]
             except KeyError:
                 n = 0
             rk.append(n)
-            datess.append(str(daytofind.date()))
+            datess.append(str(datetofind.date()))
 
         return {'old': rk, 'old_date': datess, 'future': future, 'plan': plan, 'program': program}
 
