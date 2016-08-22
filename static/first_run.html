@@ -46,33 +46,32 @@
     </style>
 </head>
 <body>
+
 {% raw modules.Artem('ui_alert.html') %}
-<div class='tiny'>
+{% raw modules.Artem('ui_exer_select.html') %}
 
-    <div class='blueblock specialblue' style='border-radius: 0 0 5px 5px'>
-
-        {% raw modules.Artem('ui_exer_select.html', description=data['description'], descriptions=data['descriptions'],
-        opened_ex=data['opened_ex']) %}
-        <a style='font-size:2em; font-weight: normal;'>Вы впервые запустили упражение {{ data['description'] }}</a> <br>
-        <p style="font-size: 1em; margin: 20px 0 0 0;">
+<div class='grey_imp'>
+    <div class='leftcorn'>
+        <a style='font-size:2em; font-weight: normal;'>Вы впервые запустили упражение <b>{{ data['description'] }}</b> </a> <br>
+        <p>
             Упражнени нужно настроить как следует. Укажи, сколько выполнено тобою упражения за последние 5 дней
             (возможно нуль). Если ты их не делал, то вернись сюда через пять дней, каждый день делая по-максимуму.
         </p>
-
-    </div>
-
-    <div style='padding:10px 20px'>
-
-        <br>
-        {% for i in range(5) %}
-        <input style='width:100%' class="textinput defround" type='number' id='{{ i }}'
-               placeholder='сколько сделал {{ i+1  }} дней назад?'>
-        <br><br>
-        {% end %}
-
-    </div>
-    <div class='blueblock specialblue' style='border-radius: 5px 5px 0 0'>
-        <button id='sender' onclick='send()' class="pac defround" style='width:100%'>сохранить и обновить</button>
     </div>
 </div>
+<div style='padding:10px 20px'>
+    <br>
+    <div class='leftcorn'>
+
+        {% for i in range(5) %}
+        <input style='width:100%' class="textinput defround" type='number' id='{{ i }}'
+               placeholder='{{ i+1  }} дней назад'>
+        {% end %}
+
+
+        <br>
+        <button id='sender' onclick='send()' class="pac defround">Дальше</button>
+
+    </div>
+</div> 
 </body>
