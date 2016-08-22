@@ -7,7 +7,6 @@ from sklearn.externals import joblib
 from math import sqrt
 
 
-
 class SysFunc:
     def __init__(self, database, api):
         self.weather_cache = None
@@ -53,7 +52,7 @@ class SysFunc:
         except FileNotFoundError:
             model = RandomForestRegressor(n_estimators=54, max_features='sqrt')
 
-        wdata, counted = self.generatedata(extype, date, uid)
+        wdata, counted = self.generate_data(extype, date, uid)
 
         wdata.setdefault('cloudCover', 0)
         model.fit(np.array(
@@ -62,21 +61,21 @@ class SysFunc:
              counted[4]]).reshape(1, -1), [value])
         joblib.dump(model, 'localdata/models/{0}/{1}.pkl'.format(extype, uid))
 
-    def generatedata(self, extype, date, uid):
+    def generate_data(self, extype, date, uid):
         """
         Функция генерации данных для обучения и работы с моделью
         """
         wdata = self.get_weather(self.lat, self.lng, date)  # получение данных погоды
-        rk = self.database['data.{0}'.format(uid)].find_one({'ex': int(extype)},
+        rk = self.database['data_{0}'.format(uid)].find_one({'ex': int(extype)},
                                                             {'_id': 0, 'ex': 0})  # учёт статистических данных
         zx = sorted(rk.keys())[-5:]
         rk = [rk[i] for i in zx]
 
         counted = []
         for key, wdate in enumerate(zx):
-            delta = 1
-            # delta = abs(datetime.datetime.strptime(wdate, "%Y-%m-%d").date() -
-            #             datetime.datetime.now().date()).total_seconds() / (60 * 60 * 24)  # учёт временного интервала
+
+            delta = abs(datetime.datetime.now().date() - datetime.timedelta(days=int(wdate)) -
+                        datetime.datetime.now().date()).total_seconds() / (60 * 60 * 24)  # учёт временного интервала
             counted.append(sqrt(rk[key]) / 2 ** delta)
 
         return wdata, counted
@@ -87,7 +86,7 @@ class SysFunc:
         """
         model = joblib.load('localdata/models/{0}/{1}.pkl'.format(extype, uid))  # открытие существующей модели
         if period <= 1:  # period - длительность необходимого прогноза
-            wdata, counted = self.generatedata(extype, date, uid)
+            wdata, counted = self.generate_data(extype, date, uid)
             return (round(model.predict(np.array([wdata['cloudCover'], wdata['dewPoint'],
                                                   wdata['humidity'], wdata['pressure'], wdata['windSpeed'],
                                                   wdata['temperature'],
@@ -95,7 +94,7 @@ class SysFunc:
                                                   counted[4]])
                                         .reshape(1, -1))[0] * utp_coef))  # использование модели
         result = []
-        wdata, counted_base = self.generatedata(extype, date, uid)
+        wdata, counted_base = self.generate_data(extype, date, uid)
 
         for i in range(period):
             counted = [sqrt(val) / 2 ** (len(counted_base) - rs - 1) for rs, val in enumerate(counted_base)]
@@ -113,7 +112,7 @@ class SysFunc:
         """
         Функция генерации истории, базового и физического планов, общей программы
         """
-        # plnday = self.database['data.{0}'.format(uid)]['stat'].find_one({'ex': extype}, {'_count': 1})['_count']  # учёт статистики
+        # plnday = self.database['data_{0}'.format(uid)]['stat'].find_one({'ex': extype}, {'_count': 1})['_count']  # учёт статистики
         rk = []
         datess = []
 
@@ -124,13 +123,13 @@ class SysFunc:
         plan = []
 
         try:
-            idol = self.database['data.{0}'.format(uid)]['stat'].find_one({'ex': extype}, {'before': 1})['before']
+            idol = self.database['data_{0}'.format(uid)]['stat'].find_one({'ex': extype}, {'before': 1})['before']
         except KeyError:
-            idol = round(self.database['data.{0}'.format(uid)]['stat'].find_one({'ex': extype}, {'_all': 1})
+            idol = round(self.database['data_{0}'.format(uid)]['stat'].find_one({'ex': extype}, {'_all': 1})
                          ['_all'] /
-                         self.database['data.{0}'.format(uid)]['stat'].find_one({'ex': extype}, {'_count': 1})
+                         self.database['data_{0}'.format(uid)]['stat'].find_one({'ex': extype}, {'_count': 1})
                          ['_count'], 1)
-            self.database['data.{0}'.format(uid)]['stat'].update({'ex': extype}, {'$set': {'before': idol}})
+            self.database['data_{0}'.format(uid)]['stat'].update({'ex': extype}, {'$set': {'before': idol}})
 
         program = []
         for dlt in range(pediod):
@@ -139,7 +138,7 @@ class SysFunc:
 
             daytofind = (datetime.datetime.now() - self.get_user_info(uid, task=['reg_stamp'])['reg_stamp']).days()
             try:
-                n = self.database['data.{0}'.format(uid)].find_one({'ex': extype}, {daytofind: 1})[daytofind]
+                n = self.database['data_{0}'.format(uid)].find_one({'ex': extype}, {daytofind: 1})[daytofind]
             except KeyError:
                 n = 0
             rk.append(n)
@@ -163,7 +162,7 @@ class SysFunc:
         """
         Расчёт базового плана
         """
-        x = plus + self.database['data.{0}'.format(user)]['stat'].find_one({'ex': exer_code}, {'_count': 1})['_count']
+        x = plus + self.database['data_{0}'.format(user)]['stat'].find_one({'ex': exer_code}, {'_count': 1})['_count']
         strategy = 1  # (0)-Постепенно закрепить, (1)-Быстро преумножить
         goal = now * 1.1  # Не может быть меньше, чем сейчас
 
