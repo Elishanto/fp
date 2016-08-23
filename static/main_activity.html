@@ -1,225 +1,220 @@
 <html>
-   <head>
-      {% raw modules.Artem('include.html') %}
-
-      <title>FP</title>
-      <script type="text/javascript">
-          window.exer_code = {{ data['exer_code'] }}
-          google.load('visualization', '1.1', {packages: ['line']});
-          function drawChart() {
-            window.chart = new google.charts.Line(document.getElementById('linechart_material'));
-            window.data = new window.google.visualization.DataTable();
-                            window.data.addColumn('datetime', 'День');
-                            window.data.addColumn('number', 'Выполнено');
-                            window.data.addColumn('number', 'Предполагается');
-                            window.data.addColumn('number', 'План');
-                            window.data.addColumn('number', 'Программа');
-           // data.addRows([]);
-            window.drawoptions =  google.charts.Line.convertOptions({
-            backgroundColor: '#E2E6E8',
-              chartArea: {backgroundColor: '#E2E6E8'},
-              chart: {
-                legend:'top',
-                title: 'Данные за 10 дней',
-                fontName: 'ProximaNova-Regular',
-                subtitle: 'Колличествно выполнений упражнения',
-              },
-              height: 500
-            });
-            chart.draw(data, drawoptions);
-
+  <head>
+    {% raw modules.Artem('include.html') %}
+    <title>FP</title>
+    <script type="text/javascript">
+      window.exer_code = {{ data['exer_code'] }}
+      google.load('visualization', '1.1', {packages: ['line']});
+      function drawChart() {
+        window.chart = new google.charts.Line(document.getElementById('linechart_material'));
+        window.data = new window.google.visualization.DataTable();
+                        window.data.addColumn('datetime', 'День');
+                        window.data.addColumn('number', 'Выполнено');
+                        window.data.addColumn('number', 'Предполагается');
+                        window.data.addColumn('number', 'План');
+                        window.data.addColumn('number', 'Программа');
+       // data.addRows([]);
+        window.drawoptions =  google.charts.Line.convertOptions({
+        backgroundColor: '#E2E6E8',
+          chartArea: {backgroundColor: '#E2E6E8'},
+          chart: {
+            legend:'top',
+            title: 'Данные за 10 дней',
+            fontName: 'ProximaNova-Regular',
+            subtitle: 'Колличествно выполнений упражнения',
+          },
+          height: 500
+        });
+        chart.draw(data, drawoptions);
+      
+      }
+      $(document).ready(function() {
+      
+      $('#push').on('click', function() {
+          $("#pushval").prop('disabled', true);
+          $.ajax({'url': '/api/upd/',
+                  'type':'POST',
+                  'data': {'type': 'push_excer', 'exer_code': window.exer_code, 'data': $('#pushval').val()},
+                  'success' : function(e) {
+                      if(e['code'] >= 0){
+                          alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
+                          update_muchacho();
+                          //update_chart();
+                      }
+                      else{
+                          alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
+                      }
+                  },
+                  'error' : function(request, status, err){
+                      alertos('сбой отправки: '+status, 'rgba(239, 135, 135, 0.78)')
+                  },
+      
+                  timeout: 15000,
           }
-         $(document).ready(function() {
-
-          $('#push').on('click', function() {
-              $("#pushval").prop('disabled', true);
-              $.ajax({'url': '/api/upd/',
-                      'type':'POST',
-                      'data': {'type': 'push_excer', 'exer_code': window.exer_code, 'data': $('#pushval').val()},
-                      'success' : function(e) {
-                          if(e['code'] >= 0){
-                              alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
-                              update_muchacho();
-                              //update_chart();
-                          }
-                          else{
-                              alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
-                          }
-                      },
-                      'error' : function(request, status, err){
-                          alertos('сбой отправки: '+status, 'rgba(239, 135, 135, 0.78)')
-                      },
-
-                      timeout: 15000,
-              }
-              );
-              $('#pushval').val('');
-
-
-          })
-
-          $('#plus_one').on('click', function() {
-              $("#pushval").prop('disabled', true);
-              $.ajax({'url': '/api/upd/',
-                      'type':'POST',
-                      'data': {'type': 'push_excer', 'exer_code': window.exer_code, 'data': 1},
-                      'success' : function(e) {
-                          if(e['code'] >= 0){
-                              alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
-                              update_muchacho();
-                              //update_chart();
-                          }
-                          else{
-                              alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
-                          }
-                      },
-                      'error' : function(request, status, err){
-                          alertos('сбой отправки: '+status, 'rgba(239, 135, 135, 0.78)')
-                      },
-
-                      timeout: 15000,
-              }
-              );
-
-
-          })
-
-
-
-
-          window.update_chart = function(){
-
-
-                  $.ajax({'url': '/api/upd/',
-                      'type':'POST',
-                      'data': {'type': 'plan', 'exer_code': window.exer_code},
-                      'success' : function(m) {
-                          window.m = m;
-                          plan_days =  new Date();
-                          ny = [];
-                          for(i = m.old.length-1; i >= 0; i--)
-                          	{
-                          		ny = ny.concat([[new Date(m.old_date[i]), m.old[i],  0, 0, 0]])
-                          	}
-                          for(i = 0; i < m.future.length; i ++){
-                              plan_days.setDate(plan_days.getDate()+1);
-                              ny = ny.concat([[new Date(plan_days), 0,  m.future[i], m.plan[i], m.program[i]]])
-                          }
-                          console.log(ny);
-                          window.chart = new google.charts.Line(document.getElementById('linechart_material'));
-                            window.data = new window.google.visualization.DataTable();
-                            window.data.addColumn('datetime', 'День');
-                            window.data.addColumn('number', 'Выполнено');
-                            window.data.addColumn('number', 'Предполагается');
-                            window.data.addColumn('number', 'План');
-                            window.data.addColumn('number', 'Программа');
-
-                          window.data.addRows(ny);
-                          window.chart.draw(window.data, window.drawoptions);
-
-                      },
-                      'error' : function(request, status, err){
-                          window.alertos('Ошибка загрузки данных с графиков', 'rgba(239, 135, 135, 0.78)');
-                      },
-
-                      timeout: 15000,
-              }
-              )
+          );
+          $('#pushval').val('');
+      
+      
+      })
+      
+      $('#plus_one').on('click', function() {
+          $("#pushval").prop('disabled', true);
+          $.ajax({'url': '/api/upd/',
+                  'type':'POST',
+                  'data': {'type': 'push_excer', 'exer_code': window.exer_code, 'data': 1},
+                  'success' : function(e) {
+                      if(e['code'] >= 0){
+                          alertos('сохранено', 'rgba(113, 208, 101, 0.78)');
+                          update_muchacho();
+                          //update_chart();
+                      }
+                      else{
+                          alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
+                      }
+                  },
+                  'error' : function(request, status, err){
+                      alertos('сбой отправки: '+status, 'rgba(239, 135, 135, 0.78)')
+                  },
+      
+                  timeout: 15000,
           }
-
-
-          window.update_muchacho = function(){
-
-
+          );
+      
+      
+      })
+      
+      
+      
+      
+      window.update_chart = function(){
+      
+      
               $.ajax({'url': '/api/upd/',
-                      'type':'POST',
-                      'data': {'type': 'takedata', 'exer_code': window.exer_code},
-                      'success' : function(e) {
-                        console.log(e);
-                          if(e['code'] >= 0){
-                              $('#predicted').text(e['predval']);
-                              $('#srv').text(e['srv']);
-                              $('#program').text(e['program']);
-                              update_chart(); //It works only here
-                          }
-                          else{
-                              alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
-                          }
-                      },
-                      'error' : function(request, status, err){
-                          console.log(err);
-                          alertos('Ошибка загрузки данных '+status, 'rgba(239, 135, 135, 0.78)')
-                      },
-
-                      timeout: 30000,
-              }
-              )
-
+                  'type':'POST',
+                  'data': {'type': 'plan', 'exer_code': window.exer_code},
+                  'success' : function(m) {
+                      window.m = m;
+                      plan_days =  new Date();
+                      ny = [];
+                      for(i = m.old.length-1; i >= 0; i--)
+                        {
+                          ny = ny.concat([[new Date(m.old_date[i]), m.old[i],  0, 0, 0]])
+                        }
+                      for(i = 0; i < m.future.length; i ++){
+                          plan_days.setDate(plan_days.getDate()+1);
+                          ny = ny.concat([[new Date(plan_days), 0,  m.future[i], m.plan[i], m.program[i]]])
+                      }
+                      console.log(ny);
+                      window.chart = new google.charts.Line(document.getElementById('linechart_material'));
+                        window.data = new window.google.visualization.DataTable();
+                        window.data.addColumn('datetime', 'День');
+                        window.data.addColumn('number', 'Выполнено');
+                        window.data.addColumn('number', 'Предполагается');
+                        window.data.addColumn('number', 'План');
+                        window.data.addColumn('number', 'Программа');
+      
+                      window.data.addRows(ny);
+                      window.chart.draw(window.data, window.drawoptions);
+      
+                  },
+                  'error' : function(request, status, err){
+                      window.alertos('Ошибка загрузки данных с графиков', 'rgba(239, 135, 135, 0.78)');
+                  },
+      
+                  timeout: 15000,
           }
-
-          update_muchacho();
-
-          google.setOnLoadCallback(function(){
-          $(window).resize(function(){
-            window.chart.draw(window.data, window.drawoptions);
-          });
-              drawChart();
-              //update_chart()
-
-
-          });
-         })
-      </script>
-   </head>
-   <body>
-
-        {% raw modules.Artem('ui_exer_select.html', description=data['description'], descriptions=data['descriptions'], opened_ex=data['opened_ex']) %}
-        {% raw modules.Artem('ui_alert.html') %}
-
-      <div class="safe blueblock">
-
-         <br>
-
-            <div class="marks">
-
-              <span class="pgn_z" id="srv">0</span>
-
-          <span style="
-              margin: 0 20px;
-              opacity: 0.7;
-              font-size: 150px;
+          )
+      }
+      
+      
+      window.update_muchacho = function(){
+      
+      
+          $.ajax({'url': '/api/upd/',
+                  'type':'POST',
+                  'data': {'type': 'takedata', 'exer_code': window.exer_code},
+                  'success' : function(e) {
+                    console.log(e);
+                      if(e['code'] >= 0){
+                          $('#predicted').text(e['predval']);
+                          $('#srv').text(e['srv']);
+                          $('#program').text(e['program']);
+                          update_chart(); //It works only here
+                      }
+                      else{
+                          alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
+                      }
+                  },
+                  'error' : function(request, status, err){
+                      console.log(err);
+                      alertos('Ошибка загрузки данных '+status, 'rgba(239, 135, 135, 0.78)')
+                  },
+      
+                  timeout: 30000,
+          }
+          )
+      
+      }
+      
+      update_muchacho();
+      
+      google.setOnLoadCallback(function(){
+      $(window).resize(function(){
+        window.chart.draw(window.data, window.drawoptions);
+      });
+          drawChart();
+          //update_chart()
+      
+      
+      });
+      })
+    </script>
+  </head>
+  <body>
+    {% raw modules.Artem('ui_exer_select.html', description=data['description'], descriptions=data['descriptions'], opened_ex=data['opened_ex']) %}
+    {% raw modules.Artem('ui_alert.html') %}
+    <div class="safe blueblock">
+      <br>
+      <div class="marks">
+        <span class="pgn_z" id="srv">0</span>
+        <span style="
+          margin: 0 20px;
+          opacity: 0.7;
+          font-size: 150px;
           ">/</span>
-
-          <span class="pgn_z" id="program">0</span>
-
-              <!--
-               <div id='predicted' style="background-color: white; color:265EEA">0</div>
-               <div style="background-color: #DBC567; color:white" id='program'>0</div>
-               <div style="background-color: #565656; color:white" id='srv'>0</div>-->
-            </div>
-
-         <div class="url" style="
-            width: 25%;
-            margin: 0 auto;
-            min-width: 300px;max-width: 400px;box-sizing: border-box;">
-
-            <br><br>
-            <div class="zavorotnik">
-            <button class="pac defround" id="plus_one" style="box-sizing: border-box;color: white;background-color: #7f98f2;">+1</button>
-
-               <input type="number"  class="textinput defround" placeholder="..." id="pushval" style="
-                  width: calc(100% - 160px);
-                  box-sizing: border-box;
-                  ">
-               <button class="pac defround" id="push" style="box-sizing: border-box;color: #476bed;background-color: white;">ОК</button>
-            </div>
-            <p style="text-align: left;padding: 10px 20px;box-sizing: border-box;font-size: 1em;margin-top: 25px;">Для достижения точного результата анализов, необходимо вносить данные об упражнениях не позднее, чем после <b>30 минут</b>, с момента их выполнения.</p>
-         </div>
+        <span class="pgn_z" id="program">0</span>
+        <!--
+          <div id='predicted' style="background-color: white; color:265EEA">0</div>
+          <div style="background-color: #DBC567; color:white" id='program'>0</div>
+          <div style="background-color: #565656; color:white" id='srv'>0</div>-->
       </div>
-      <div class="promise gray_block" >
-         {% raw modules.Artem('ui_user.html', data=data['data']) %}
-         <div id="linechart_material"></div>
+      <div class="url" style="
+        width: 25%;
+        margin: 0 auto;
+        min-width: 300px;max-width: 400px;box-sizing: border-box;">
+        <br>
+        <div class="warn_info">
+          <p style="text-align: left;padding: 10px 20px;box-sizing: border-box;font-size: 1em;margin-top: 25px;">Программа не рекомендует дополнительного выполнения упражнений сегодня </p>
+          <br>
+ 
+
+        </div>
+        <br>
+        <div class="zavorotnik">
+          <button class="pac defround" id="plus_one" style="box-sizing: border-box;color: white;background-color: #7f98f2;">+1</button>
+          <input type="number"  class="textinput defround" placeholder="..." id="pushval" style="
+            width: calc(100% - 160px);
+            box-sizing: border-box;
+            ">
+          <button class="pac defround" id="push" style="box-sizing: border-box;color: #476bed;background-color: white;">ОК</button>
+        </div>
+        <p style="text-align: left;padding: 10px 20px;box-sizing: border-box;font-size: 1em;margin-top: 25px;">Для достижения точного результата анализов, необходимо вносить данные об упражнениях не позднее, чем после <b>30 минут</b>, с момента их выполнения.</p>
       </div>
-      <img src='/files/load.GIF' style='display:none'>
-   </body>
+    </div>
+    <div class="promise gray_block" >
+      {% raw modules.Artem('ui_user.html', data=data['data']) %}
+      <div id="linechart_material"></div>
+    </div>
+    <img src='/files/load.GIF' style='display:none'>
+  </body>
 </html>
