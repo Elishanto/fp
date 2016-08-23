@@ -139,6 +139,7 @@
                               $('#predicted').text(e['predval']);
                               $('#srv').text(e['srv']);
                               $('#program').text(e['program']);
+                              update_chart(); //It works only here
                           }
                           else{
                               alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
@@ -156,6 +157,7 @@
           }
 
           update_muchacho();
+
           google.setOnLoadCallback(function(){
           $(window).resize(function(){
             window.chart.draw(window.data, window.drawoptions);
