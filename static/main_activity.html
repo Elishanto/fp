@@ -15,16 +15,17 @@
                             window.data.addColumn('number', 'План');
                             window.data.addColumn('number', 'Программа');
            // data.addRows([]);
-            window.drawoptions = {
+            window.drawoptions =  google.charts.Line.convertOptions({
+            backgroundColor: '#E2E6E8',
+              chartArea: {backgroundColor: '#E2E6E8'},
               chart: {
                 legend:'top',
                 title: 'Данные за 10 дней',
                 fontName: 'ProximaNova-Regular',
                 subtitle: 'Колличествно выполнений упражнения',
-                backgroundColor: '#E4E4E4',
               },
               height: 500
-            };
+            });
             chart.draw(data, drawoptions);
 
           }
