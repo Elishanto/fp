@@ -46,6 +46,32 @@
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05);
 }
 
+.warn_info {
+    background-color: #bf284b;
+    color: white;
+    border-radius: 3px;
+}
+
+ .block {
+    position: relative;
+    color: #fff;
+   }
+   .block::after, .block::before {
+    content: '';
+    position: absolute;
+    background: #bf284b;
+    right: 38px; bottom: -8px;
+    width: 20px; height: 20px;
+    z-index: -1; /* Прячем за основным блоком */
+    transform: rotate(45deg); /* Поворачиваем на 45º */
+    -webkit-transform: rotate(45deg);
+    border-radius: 3px;
+   }
+
+   .block::before {
+    z-index: 1; /* Накладываем поверх, чтобы скрыть следы тени */
+   }
+   
 .jass:nth-of-type(1) {
     margin-bottom: 5px;
 }

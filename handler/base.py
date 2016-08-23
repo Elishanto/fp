@@ -161,8 +161,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def upd(self, args):
         hday = str((datetime.datetime.now() - self.get_user_info(self.get_current_user(), task=['reg_stamp'])[
             'reg_stamp']).days)
-        jtype = args.get('type').lower().strip()
-        print("HDAY", self.get_user_info(self.get_current_user(), task=['reg_stamp'])['reg_stamp'], hday, args)
+        jtype = args.get('type', '').lower().strip()
         if jtype == 'push_excer':
             exer_code = int(args.get("exer_code"))
             if int(exer_code) in self.data['exer']:
@@ -201,7 +200,12 @@ class BaseHandler(tornado.web.RequestHandler):
                 except KeyError:
                     srv = 0
 
-                return {'code': 1, 'predval': predval, 'srv': srv, 'program': program}
+                resp = {'code': 1, 'predval': predval, 'srv': srv, 'program': program}
+
+                if srv > program*2:
+                    resp['comment'] = "Программа не рекомендует дополнительного выполнения упражнений сегодня"
+
+                return resp
 
         elif jtype == 'plan':
             # МЕТОД API: работа с планом

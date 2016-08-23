@@ -84,8 +84,15 @@
       })
       
       
-      
-      
+      window.warning = function(MSG){
+        $('.warn_info').hide();
+
+        if(MSG != undefined){
+          $('#warn_text').text(MSG);
+          $('.warn_info').show();
+        }
+      } 
+
       window.update_chart = function(){
       
       
@@ -139,7 +146,9 @@
                           $('#predicted').text(e['predval']);
                           $('#srv').text(e['srv']);
                           $('#program').text(e['program']);
-                          update_chart(); //It works only here
+
+                            window.warning(e['comment']);
+                            update_chart(); //It works only here
                       }
                       else{
                           alertos('ошибка '+e['code'] + ': ' + e['description'], 'rgba(239, 135, 135, 0.78)')
@@ -189,27 +198,26 @@
           <div style="background-color: #565656; color:white" id='srv'>0</div>-->
       </div>
       <div class="url" style="
-        width: 25%;
-        margin: 0 auto;
-        min-width: 300px;max-width: 400px;box-sizing: border-box;">
-        <br>
-        <div class="warn_info">
-          <p style="text-align: left;padding: 10px 20px;box-sizing: border-box;font-size: 1em;margin-top: 25px;">Программа не рекомендует дополнительного выполнения упражнений сегодня </p>
-          <br>
- 
+width: 25%;
+margin: 0 auto;
+min-width: 300px;max-width: 400px;box-sizing: border-box;">
+<br>
+<div class="warn_info block" style="display:none;">
+<p id="warn_text" style="text-align: left;padding: 20px 30px;box-sizing: border-box;font-size: 1em;margin-top: 25px;">Программа не рекомендует дополнительного выполнения упражнений сегодня </p>
 
-        </div>
-        <br>
-        <div class="zavorotnik">
-          <button class="pac defround" id="plus_one" style="box-sizing: border-box;color: white;background-color: #7f98f2;">+1</button>
-          <input type="number"  class="textinput defround" placeholder="..." id="pushval" style="
-            width: calc(100% - 160px);
-            box-sizing: border-box;
-            ">
-          <button class="pac defround" id="push" style="box-sizing: border-box;color: #476bed;background-color: white;">ОК</button>
-        </div>
-        <p style="text-align: left;padding: 10px 20px;box-sizing: border-box;font-size: 1em;margin-top: 25px;">Для достижения точного результата анализов, необходимо вносить данные об упражнениях не позднее, чем после <b>30 минут</b>, с момента их выполнения.</p>
-      </div>
+</div>
+
+<div class="zavorotnik">
+<button class="pac defround" id="plus_one" style="box-sizing: border-box;color: white;background-color: #7f98f2;">+1</button>
+<input type="number" class="textinput defround" placeholder="..." id="pushval" style="
+width: calc(100% - 160px);
+box-sizing: border-box;
+">
+<button class="pac defround" id="push" style="box-sizing: border-box;color: #476bed;background-color: white;">ОК</button>
+</div>
+<p style="text-align: left;padding: 10px 20px;box-sizing: border-box;font-size: 1em;margin-top: 25px;">Для достижения точного результата анализов, необходимо вносить данные об упражнениях не позднее, чем после <b>30 минут</b>, с момента их выполнения.</p>
+</div>
+
     </div>
     <div class="promise gray_block" >
       {% raw modules.Artem('ui_user.html', data=data['data']) %}
