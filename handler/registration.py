@@ -1,7 +1,7 @@
 import json
 import os
 from handler import BaseHandler
-from api.baseapi import Api
+from api.sysfunc import generate_request_return
 import re
 import recaptcha2
 import datetime
@@ -12,14 +12,14 @@ CAPTCHA_SECRET_KEY = '6LdadiITAAAAAI0o59pEnTCHGCn5Zh4bB17PJ-bt'
 
 
 class RegistrationHandler(BaseHandler):
-    def get(self, url):
+    def get(self, _):
         self.render('../static/register_activity.html')
 
-    def post(self, url=None):
-        lake = self.get_argument("lake").lower().strip()  # global/exID
+    def post(self, _=None):
+        lake = self.get_argument('lake').lower().strip()  # global/exID
         if lake == 'global':
             allowed = ('name', 'email', 'wt', 'ht', 'password')
-            task = json.loads(self.get_argument("aim").strip())
+            task = json.loads(self.get_argument('aim').strip())
 
             # if not ('captcha' not in task.keys() or
             #             recaptcha2.verify(CAPTCHA_SECRET_KEY, task['captcha'], self.request.remote_ip)['success']):
@@ -30,7 +30,7 @@ class RegistrationHandler(BaseHandler):
             try:
                 task = {i: task[i] for i in allowed}
             except KeyError:
-                self.write(Api.generate_request_return(-90))
+                self.write(generate_request_return(-90))
                 self.finish()
                 return
 
@@ -38,7 +38,7 @@ class RegistrationHandler(BaseHandler):
                     or (not task['wt'].isdigit()) \
                     or (not task['ht'].isdigit()) \
                     or len(task['password']) == 0:
-                self.write(Api.generate_request_return(-91))
+                self.write(generate_request_return(-91))
                 self.finish()
                 return
 
@@ -46,4 +46,4 @@ class RegistrationHandler(BaseHandler):
             task['opened_ex'] = (10,)
             task['valid'] = 1
             self.insert_data('users', task)
-            self.write(Api.generate_request_return(1))
+            self.write(generate_request_return(1))

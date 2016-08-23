@@ -7,6 +7,30 @@ from sklearn.externals import joblib
 from math import sqrt
 
 
+def generate_request_return(error=-5454):
+    error_description = {  # описание ошибок
+        -54: "?",
+        -5454: 'Undefined error',
+        -10: 'Bad format',
+        -504: 'Service error',
+        -90: 'Wrong permissions (secure or no data)',
+        1: 'Success',
+        -11: 'Bad length',
+        -12: 'Insufficient data',
+        -13: 'The number required',
+        -14: 'The number must me positive',
+        -15: 'Bad extype',
+        -20: 'Bad size',
+        -21: 'Bad format',
+        -91: 'Form inadequate',
+        -100: 'Bad captcha'
+    }
+    try:
+        return {'code': error, 'description': error_description[error]}
+    except BaseException:
+        return {'code': error, 'description': error_description[-5454]}
+
+
 class SysFunc:
     def __init__(self, database, api):
         self.weather_cache = None
@@ -22,8 +46,9 @@ class SysFunc:
         """
         Генерация метеоданных
         """
-        #КЕШИРОВАНИЕ
-        if True:#abs(self.api.get_user_info(self.api.get_current_user(), task = ['reg_stamp'])['reg_stamp'] - time) <= 1:
+        # КЭШИРОВАНИЕ
+        print(time)
+        if True:  # abs(self.api.get_user_info(self.api.get_current_user(), task = ['reg_stamp'])['reg_stamp'] - time) <= 1:
             if self.weather_cache is None:
                 self.weather_cache = forecastio.load_forecast(self.weather_key, lat_, lng_,
                                                               time=datetime.datetime.now(),
@@ -73,7 +98,6 @@ class SysFunc:
 
         counted = []
         for key, wdate in enumerate(zx):
-
             delta = abs(datetime.datetime.now().date() - datetime.timedelta(days=int(wdate)) -
                         datetime.datetime.now().date()).total_seconds() / (60 * 60 * 24)  # учёт временного интервала
             counted.append(sqrt(rk[key]) / 2 ** delta)
@@ -119,7 +143,7 @@ class SysFunc:
         try:
             future = self.predict_data(extype, datetime.datetime.now(), uid, period=pediod)
         except IndexError:
-            return self.api.generate_request_return(-12)
+            return generate_request_return(-12)
         plan = []
 
         try:
@@ -134,7 +158,7 @@ class SysFunc:
         program = []
         for dlt in range(pediod):
             plan.append(self.calculate_default_program(uid, idol, extype, dlt))
-            program.append(int(sqrt((plan[-1] * future[dlt]))))
+            program.append(int(sqrt(plan[-1] * future[dlt])))
 
             datetofind = self.api.get_user_info(uid, task=['reg_stamp'])['reg_stamp']
             daytofind = str((datetime.datetime.now() - datetofind).days)
@@ -157,7 +181,6 @@ class SysFunc:
             return '/files/users/default.png'
 
         return '/files/users/' + str(n)
-
 
     def calculate_default_program(self, user, now, exer_code, plus):
         """
@@ -197,17 +220,14 @@ class SysFunc:
         """
 
         """
-        data = self.get_user_info(uid, task=['wt', 'ht'])
-        coef = data['wt']/data['ht']
-        GROUPS = [2.5, 3, 1, 10] #!
+        data = self.api.get_user_info(uid, task=['wt', 'ht'])
+        coef = data['wt'] / data['ht']
+        groups = [2.5, 3, 1, 10]  # !
 
-        nn = [abs(coef-i) for i in GROUPS]
-        nn = [ i/sum(nn) for i in nn ]
+        nn = [abs(coef - i) for i in groups]
+        nn = [i / sum(nn) for i in nn]
 
         return nn
-
-
-
 
     def upd_data(self, uid, exer_code, count, day_before):
         """
@@ -220,15 +240,16 @@ class SysFunc:
         архивы поднимать по группе, к которой принадлежит пользователь
         """
 
-        
+        beforeprogram = []
         try:
-            beforeprogramm = self.database['data.system.beforeprogram'].find_one({'exer_code':exer_code, 'group':self.get_user_grop(uid)})['uppers']
+            beforeprogram = self.database['data.system.beforeprogram'].find_one(
+                {'exer_code': exer_code, 'group': self.get_user_grop(uid)})['uppers']
         except KeyError:
-            beforeprogram = []
+            pass
 
-        beforeprogram = beforeprogram + [0 for i in range(max(0, day_before - len(beforeprogram) ))]
-        usr_data = self.database['data.'+str(uid)].find_one()
-        error  = 0
+        beforeprogram = beforeprogram + [0] * len(range(max(0, day_before - len(beforeprogram))))
+        usr_data = self.database['data_' + str(uid)].find_one()
+        error = 0
 
         for i in range(day_before):
             try:
@@ -237,5 +258,3 @@ class SysFunc:
                 usr_ans = 0
 
             error += (beforeprogram[i] - usr_ans) ** 2
-
-        print(error)

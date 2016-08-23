@@ -13,7 +13,7 @@ class UserHandler(BaseHandler):
         else:
             self.write('Задача неопознана')
 
-    def register(self, url):
+    def register(self, _):
         referal = self.get_argument("ref", '', True)
         self.render('../static/register_activity.html', referal=referal)
 

@@ -1,21 +1,25 @@
-import api
+from api.baseapi import Api
+from api.sysfunc import SysFunc
 import datetime
-systemfunctions = api.fn()
+
+systemfunctions = SysFunc(Api.database, Api)
 strdate = str(datetime.datetime.now().date())
 now = datetime.datetime.now()
 logfile = open('learner.log', 'a+')
-logfile.write(str(datetime.datetime.now())+' started\n')
+logfile.write(str(datetime.datetime.now()) + ' started\n')
 logfile.close()
 try:
-    queue = api.Api.database['data.system'].find_one({'config': 'main'}, {'queue':1})['queue']
+    queue = Api.database['data.system'].find_one({'config': 'main'}, {'queue': 1})['queue']
     for user, exer_code in queue:
-        try: dpush = api.Api.database['data.' + str(user)].find_one({'ex':exer_code}, {strdate:1})[strdate]
-        except IndexError: continue
+        try:
+            dpush = Api.database['data.' + str(user)].find_one({'ex': exer_code}, {strdate: 1})[strdate]
+        except IndexError:
+            continue
         systemfunctions.fit_data(exer_code, dpush, now, user)
-        api.Api.database['data.system'].update({'config': 'main'}, {'$pull':{'queue': (user, exer_code)}})
-        
+        Api.database['data.system'].update({'config': 'main'}, {'$pull': {'queue': (user, exer_code)}})
+
         logfile = open('learner.log', 'a+')
-        logfile.write('{2} doing user:{0} ex:{1}'.format(user, exer_code, str(datetime.datetime.now()))+'\n')
+        logfile.write('{2} doing user:{0} ex:{1}'.format(user, exer_code, str(datetime.datetime.now())) + '\n')
         logfile.close()
 except IndexError as e:
     logfile = open('learner.log', 'a+')
@@ -23,5 +27,5 @@ except IndexError as e:
     logfile.close()
 
 logfile = open('learner.log', 'a+')
-logfile.write(str(datetime.datetime.now())+ ' done\n')
+logfile.write(str(datetime.datetime.now()) + ' done\n')
 logfile.close()
