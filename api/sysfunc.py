@@ -111,12 +111,12 @@ class SysFunc:
         model = joblib.load('localdata/models/{0}/{1}.pkl'.format(extype, uid))  # открытие существующей модели
         if period <= 1:  # period - длительность необходимого прогноза
             wdata, counted = self.generate_data(extype, date, uid)
-            return (round(model.predict(np.array([wdata['cloudCover'], wdata['dewPoint'],
-                                                  wdata['humidity'], wdata['pressure'], wdata['windSpeed'],
-                                                  wdata['temperature'],
-                                                  wdata['windBearing'], counted[0], counted[1], counted[2], counted[3],
-                                                  counted[4]])
-                                        .reshape(1, -1))[0] * utp_coef))  # использование модели
+            return round(model.predict(np.array([wdata['cloudCover'], wdata['dewPoint'],
+                                                 wdata['humidity'], wdata['pressure'], wdata['windSpeed'],
+                                                 wdata['temperature'],
+                                                 wdata['windBearing'], counted[0], counted[1], counted[2], counted[3],
+                                                 counted[4]])
+                                       .reshape(1, -1))[0] * utp_coef)  # использование модели
         result = []
         wdata, counted_base = self.generate_data(extype, date, uid)
 
@@ -216,7 +216,7 @@ class SysFunc:
 
         return int(eval(str(now) + zoom[(x + 1) % 7]))  # умножение
 
-    def get_user_grop(self, uid):
+    def get_user_group(self, uid):
         """
 
         """
@@ -228,6 +228,11 @@ class SysFunc:
         nn = [i / sum(nn) for i in nn]
 
         return nn
+
+    def get_stat(self, uid, n):
+        history = self.plan(uid, 10)['old']
+        nth = self.predict_data(10, history[-1], uid, n)
+        return nth[-1]
 
     def upd_data(self, uid, exer_code, count, day_before):
         """
@@ -243,7 +248,7 @@ class SysFunc:
         beforeprogram = []
         try:
             beforeprogram = self.database['data.system.beforeprogram'].find_one(
-                {'exer_code': exer_code, 'group': self.get_user_grop(uid)})['uppers']
+                {'exer_code': exer_code, 'group': self.get_user_group(uid)})['uppers']
         except KeyError:
             pass
 
